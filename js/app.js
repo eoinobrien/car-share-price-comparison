@@ -266,9 +266,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else if (duration <= 168) {
             // Daily rate for 1-7 days
-            timeCost = calculateOptimalPrice(car, duration / 24, 24, 'day', 7, 'week');
-            pricingTier = timeCost.tier;
-            timeCost = timeCost.price;
+            // Calculate days and remaining hours
+            const days = Math.floor(duration / 24);
+            const remainingHours = duration % 24;
+            
+            // Check if combining daily + hourly rates might be cheaper than multiple days
+            const fullDaysPrice = days * car.pricing.day;
+            const remainingHoursPrice = Math.min(car.pricing.day, remainingHours * car.pricing.hour);
+            const combinedPrice = fullDaysPrice + remainingHoursPrice;
+            
+            // Check if using one more full day is cheaper than day + hours
+            const nextFullDayPrice = (days + 1) * car.pricing.day;
+            
+            if (nextFullDayPrice <= combinedPrice) {
+                // Using full days is cheaper
+                timeCost = nextFullDayPrice;
+                pricingTier = `${days + 1} days`;
+            } else {
+                // Using days + hours is cheaper
+                timeCost = combinedPrice;
+                if (remainingHours > 0) {
+                    if (remainingHours < 1) {
+                        // Handle case when remaining time is less than 1 hour
+                        const mins = Math.round(remainingHours * 60);
+                        pricingTier = `${days} day${days > 1 ? 's' : ''} + ${mins} min${mins > 1 ? 's' : ''}`;
+                    } else if (Number.isInteger(remainingHours)) {
+                        // Whole remaining hours
+                        pricingTier = `${days} day${days > 1 ? 's' : ''} + ${remainingHours} hour${remainingHours > 1 ? 's' : ''}`;
+                    } else {
+                        // Fractional remaining hours
+                        const formattedHours = remainingHours.toFixed(2).replace(/\.00$/, '').replace(/0+$/, '');
+                        pricingTier = `${days} day${days > 1 ? 's' : ''} + ${formattedHours} hours`;
+                    }
+                } else {
+                    pricingTier = `${days} day${days > 1 ? 's' : ''}`;
+                }
+            }
         } else {
             // Weekly rate for more than 7 days
             const weeks = Math.floor(duration / 168);
@@ -288,12 +321,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     remainingCost = Math.min(daysAtDailyRate, additionalWeek);
                     
                     if (daysAtDailyRate <= additionalWeek) {
-                        pricingTier = `${weeks} weeks + ${remainingDays} days`;
+                        pricingTier = `${weeks} week${weeks > 1 ? 's' : ''} + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
                     } else {
-                        pricingTier = `${weeks + 1} weeks`;
+                        pricingTier = `${weeks + 1} week${weeks + 1 > 1 ? 's' : ''}`;
                     }
                 } else {
-                    pricingTier = `${weeks} weeks`;
+                    pricingTier = `${weeks} week${weeks > 1 ? 's' : ''}`;
                 }
                 
                 timeCost = weeksCost + remainingCost;
@@ -301,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // No weekly rate, fall back to daily rate
                 const totalDays = Math.ceil(duration / 24);
                 timeCost = totalDays * car.pricing.day;
-                pricingTier = `${totalDays} days (no weekly rate)`;
+                pricingTier = `${totalDays} day${totalDays > 1 ? 's' : ''} (no weekly rate)`;
             }
         }
 
