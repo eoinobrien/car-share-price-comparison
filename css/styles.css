@@ -106,6 +106,10 @@ select:focus {
     align-items: center;
 }
 
+.filter-toggle:hover {
+    color: white;
+}
+
 .filter-toggle:before {
     content: '▼';
     font-size: 10px;
