@@ -14,13 +14,76 @@ document.addEventListener('DOMContentLoaded', function() {
     const comparisonForm = document.getElementById('comparison-form') as HTMLFormElement;
     const durationInput = document.getElementById('duration') as HTMLInputElement;
     const kilometersInput = document.getElementById('kilometers') as HTMLInputElement;
-    const carTypeSelect = document.getElementById('car-type') as HTMLSelectElement;
-    const transmissionSelect = document.getElementById('transmission') as HTMLSelectElement;
+    const carTypeContainer = document.getElementById('car-type') as HTMLDivElement;
+    const transmissionContainer = document.getElementById('transmission') as HTMLDivElement;
     const resultsContainer = document.getElementById('results-container') as HTMLDivElement;
     const filterToggle = document.getElementById('filter-toggle') as HTMLButtonElement;
     const advancedFilters = document.getElementById('advanced-filters') as HTMLDivElement;
     const sortSelect = document.getElementById('sort-by') as HTMLSelectElement;
     const loadingIndicator = document.getElementById('loading-indicator') as HTMLDivElement;
+
+    // Get all checkbox elements
+    const carTypeCheckboxes = carTypeContainer.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
+    const transmissionCheckboxes = transmissionContainer.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
+    
+    // Helper function to set up filter checkbox logic
+    function setupFilterCheckboxes(checkboxes: NodeListOf<HTMLInputElement>): void {
+        const allCheckbox = checkboxes[0]; // First checkbox is always 'All'
+        
+        // When 'All' is checked, uncheck others
+        allCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== allCheckbox) {
+                        cb.checked = false;
+                    }
+                });
+            } else {
+                // If unchecking 'All' without selecting others, keep 'All' checked
+                let anyOtherChecked = false;
+                checkboxes.forEach(cb => {
+                    if (cb !== allCheckbox && cb.checked) {
+                        anyOtherChecked = true;
+                    }
+                });
+                
+                if (!anyOtherChecked) {
+                    this.checked = true;
+                }
+            }
+            calculatePrices();
+        });
+        
+        // When any other checkbox is checked, uncheck 'All'
+        checkboxes.forEach(cb => {
+            if (cb !== allCheckbox) {
+                cb.addEventListener('change', function() {
+                    // When checking a specific option
+                    if (this.checked) {
+                        allCheckbox.checked = false;
+                    } 
+                    
+                    // If no checkboxes are selected, re-check 'All'
+                    let anyChecked = false;
+                    checkboxes.forEach(innerCb => {
+                        if (innerCb.checked) {
+                            anyChecked = true;
+                        }
+                    });
+                    
+                    if (!anyChecked) {
+                        allCheckbox.checked = true;
+                    }
+                    
+                    calculatePrices();
+                });
+            }
+        });
+    }
+    
+    // Set up checkbox logic for both filters
+    setupFilterCheckboxes(carTypeCheckboxes);
+    setupFilterCheckboxes(transmissionCheckboxes);
     
     // Initialize advanced filters toggle
     filterToggle.addEventListener('click', function() {
@@ -62,8 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listeners for input changes to calculate prices automatically
     durationInput.addEventListener('input', debounce(calculatePrices, 500));
     kilometersInput.addEventListener('input', debounce(calculatePrices, 500));
-    carTypeSelect.addEventListener('change', calculatePrices);
-    transmissionSelect.addEventListener('change', calculatePrices);
 
     // Keep the form submission event listener for when users press Enter
     comparisonForm.addEventListener('submit', function(event) {
@@ -81,6 +142,19 @@ document.addEventListener('DOMContentLoaded', function() {
             timeout = window.setTimeout(() => func.apply(context, args), delay);
         };
     }
+    
+    /**
+     * Helper function to get selected values from checkboxes
+     */
+    function getSelectedCheckboxValues(checkboxes: NodeListOf<HTMLInputElement>): string[] {
+        const values: string[] = [];
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                values.push(cb.value);
+            }
+        });
+        return values;
+    }
 
     /**
      * Calculate prices for all cars based on user input
@@ -93,8 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get user input values
         const duration = parseFloat(durationInput.value);
         const kilometers = parseFloat(kilometersInput.value);
-        const selectedCarType = carTypeSelect.value;
-        const selectedTransmission = transmissionSelect.value;
+        const selectedCarTypes = getSelectedCheckboxValues(carTypeCheckboxes);
+        const selectedTransmissions = getSelectedCheckboxValues(transmissionCheckboxes);
 
         // Validate inputs
         const isDurationValid = validateInput(durationInput);
@@ -115,13 +189,17 @@ document.addEventListener('DOMContentLoaded', function() {
             minDurationMessage.innerHTML = '<strong>Note:</strong> All providers require a minimum booking of 1 hour. Prices shown are for 1 hour rentals.';
         }
 
-        // Filter cars based on selected car type and transmission
+        // Filter cars based on selected car types and transmissions
         let filteredCars = cars.slice();
-        if (selectedCarType !== 'all') {
-            filteredCars = filteredCars.filter(car => car.type === selectedCarType);
+        
+        // Apply car type filter (if 'all' is selected, don't filter)
+        if (!selectedCarTypes.includes('all')) {
+            filteredCars = filteredCars.filter(car => selectedCarTypes.includes(car.type));
         }
-        if (selectedTransmission !== 'all') {
-            filteredCars = filteredCars.filter(car => car.transmission === selectedTransmission);
+        
+        // Apply transmission filter (if 'all' is selected, don't filter)
+        if (!selectedTransmissions.includes('all')) {
+            filteredCars = filteredCars.filter(car => selectedTransmissions.includes(car.transmission));
         }
 
         // Calculate prices for each car
@@ -315,8 +393,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function shareComparison(carId: string): void {
         const duration = parseFloat(durationInput.value);
         const kilometers = parseFloat(kilometersInput.value);
-        const carType = carTypeSelect.value;
-        const transmission = transmissionSelect.value;
+        const selectedCarTypes = getSelectedCheckboxValues(carTypeCheckboxes);
+        const selectedTransmissions = getSelectedCheckboxValues(transmissionCheckboxes);
         
         // Generate URL with parameters
         const baseUrl = window.location.href.split('?')[0];
@@ -325,12 +403,12 @@ document.addEventListener('DOMContentLoaded', function() {
         url.searchParams.set('km', kilometers.toString());
         url.searchParams.set('carId', carId);
         
-        if (carType !== 'all') {
-            url.searchParams.set('carType', carType);
+        if (!selectedCarTypes.includes('all')) {
+            url.searchParams.set('carType', selectedCarTypes.join(','));
         }
         
-        if (transmission !== 'all') {
-            url.searchParams.set('transmission', transmission);
+        if (!selectedTransmissions.includes('all')) {
+            url.searchParams.set('transmission', selectedTransmissions.join(','));
         }
         
         // Copy to clipboard
@@ -359,7 +437,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (urlParams.has('carType')) {
-            carTypeSelect.value = urlParams.get('carType')!;
+            const carTypes = urlParams.get('carType')!.split(',');
+            
+            // Uncheck "All" and check the specific car types
+            const allCheckbox = document.getElementById('car-type-all') as HTMLInputElement;
+            if (allCheckbox) {
+                allCheckbox.checked = false;
+            }
+            
+            carTypes.forEach(carType => {
+                const specificCheckbox = document.getElementById(`car-type-${carType}`) as HTMLInputElement;
+                if (specificCheckbox) {
+                    specificCheckbox.checked = true;
+                }
+            });
+            
             // Ensure advanced filters are shown if a filter is applied
             advancedFilters.classList.add('show');
             filterToggle.classList.add('expanded');
@@ -367,7 +459,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (urlParams.has('transmission')) {
-            transmissionSelect.value = urlParams.get('transmission')!;
+            const transmissions = urlParams.get('transmission')!.split(',');
+            
+            // Uncheck "All" and check the specific transmissions
+            const allCheckbox = document.getElementById('transmission-all') as HTMLInputElement;
+            if (allCheckbox) {
+                allCheckbox.checked = false;
+            }
+            
+            transmissions.forEach(transmission => {
+                const specificCheckbox = document.getElementById(`transmission-${transmission}`) as HTMLInputElement;
+                if (specificCheckbox) {
+                    specificCheckbox.checked = true;
+                }
+            });
+            
             // Ensure advanced filters are shown if a filter is applied
             advancedFilters.classList.add('show');
             filterToggle.classList.add('expanded');

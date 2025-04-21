@@ -87,6 +87,49 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
 
+/* Filter checkboxes styles */
+.filter-group {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+.filter-group legend {
+    font-weight: 600;
+    padding: 0 5px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+}
+
+.checkbox-item input[type="checkbox"] {
+    margin-right: 5px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-item label {
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-item:hover label {
+    color: #3498db;
+}
+
 /* Filter controls section */
 .filter-controls {
     margin-top: 15px;
@@ -107,7 +150,7 @@ select:focus {
 }
 
 .filter-toggle:hover {
-    color: white;
+    color: #2980b9;
 }
 
 .filter-toggle:before {
@@ -132,7 +175,7 @@ select:focus {
 }
 
 .advanced-filters.show {
-    max-height: 200px; /* Large enough to show all content */
+    max-height: 300px; /* Increased to accommodate more content */
 }
 
 .advanced-filters .form-group {
@@ -382,5 +425,10 @@ footer {
     
     .advanced-filters .form-group {
         flex: 100%;
+    }
+    
+    .checkbox-group {
+        flex-direction: column;
+        gap: 5px;
     }
 }

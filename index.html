@@ -37,24 +37,55 @@
                     
                     <div id="advanced-filters" class="advanced-filters">
                         <div class="form-group">
-                            <label for="car-type">Car Type:</label>
-                            <select id="car-type">
-                                <option value="all">All Cars</option>
-                                <option value="economy">Economy</option>
-                                <option value="compact">Compact</option>
-                                <option value="standard">Standard</option>
-                                <option value="premium">Premium</option>
-                                <option value="van">Van</option>
-                            </select>
+                            <fieldset class="filter-group">
+                                <legend>Car Type:</legend>
+                                <div class="checkbox-group" id="car-type">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="car-type-all" name="car-type" value="all" checked>
+                                        <label for="car-type-all">All Cars</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="car-type-economy" name="car-type" value="economy">
+                                        <label for="car-type-economy">Economy</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="car-type-compact" name="car-type" value="compact">
+                                        <label for="car-type-compact">Compact</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="car-type-standard" name="car-type" value="standard">
+                                        <label for="car-type-standard">Standard</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="car-type-premium" name="car-type" value="premium">
+                                        <label for="car-type-premium">Premium</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="car-type-van" name="car-type" value="van">
+                                        <label for="car-type-van">Van</label>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                         
                         <div class="form-group">
-                            <label for="transmission">Transmission:</label>
-                            <select id="transmission">
-                                <option value="all">All</option>
-                                <option value="automatic">Automatic</option>
-                                <option value="manual">Manual</option>
-                            </select>
+                            <fieldset class="filter-group">
+                                <legend>Transmission:</legend>
+                                <div class="checkbox-group" id="transmission">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="transmission-all" name="transmission" value="all" checked>
+                                        <label for="transmission-all">All</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="transmission-automatic" name="transmission" value="automatic">
+                                        <label for="transmission-automatic">Automatic</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="transmission-manual" name="transmission" value="manual">
+                                        <label for="transmission-manual">Manual</label>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                 </div>

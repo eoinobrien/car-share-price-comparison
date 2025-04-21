@@ -3,7 +3,6 @@
  */
 
 export interface CarPricing {
-  fifteenMin: number;
   hour: number;
   day: number;
   week?: number; // Optional since some cars don't have weekly rates

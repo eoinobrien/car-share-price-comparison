@@ -89,7 +89,22 @@ const CarShareCalculator = {
     car: Car,
     duration: number
   ): { cost: number; tier: string } {
-    const hourlyPrice = duration * car.pricing.hour;
+    // For durations > 1 hour, round up to the nearest 15-minute increment (0.25 hour)
+    const quarteredDuration = Math.ceil(duration * 4) / 4;
+    
+    // If duration is not a whole hour, calculate using 15-minute increments
+    let hourlyPrice: number;
+    if (Number.isInteger(quarteredDuration)) {
+      // Whole hours
+      hourlyPrice = quarteredDuration * car.pricing.hour;
+    } else {
+      // Mixed hours and 15-minute increments
+      const wholeHours = Math.floor(quarteredDuration);
+      const quarterHours = Math.round((quarteredDuration - wholeHours) * 4); // Number of 15-minute blocks
+      
+      // Calculate cost: whole hours plus quarter-hour increments
+      hourlyPrice = (wholeHours * car.pricing.hour) + (quarterHours * (car.pricing.hour / 4));
+    }
 
     // Check if daily rate would be cheaper than hourly
     if (car.pricing.day && car.pricing.day < hourlyPrice) {
@@ -101,12 +116,12 @@ const CarShareCalculator = {
     } else {
       // Format the duration to display
       let tier;
-      if (Number.isInteger(duration)) {
+      if (Number.isInteger(quarteredDuration)) {
         // Whole hours (e.g., 2 hours)
-        tier = `${duration} hour${duration > 1 ? "s" : ""}`;
+        tier = `${quarteredDuration} hour${quarteredDuration > 1 ? "s" : ""}`;
       } else {
         // Fractional hours (e.g., 1.25 hours or 2.5 hours)
-        const formattedDuration = duration
+        const formattedDuration = quarteredDuration
           .toFixed(2)
           .replace(/\.00$/, "")
           .replace(/0+$/, "");

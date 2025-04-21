@@ -3,7 +3,7 @@
  * 
  * Data Structure:
  * - Companies have policies for free kilometers that may vary by duration
- * - Cars have specific pricing based on rental duration (15 min, hour, day, week)
+ * - Cars have specific pricing based on rental duration (hour, day, week)
  */
 
 import { Car, Company } from './types';
@@ -50,7 +50,6 @@ export const cars: Car[] = [
         type: "economy",
         transmission: "manual",
         pricing: {
-            fifteenMin: 2.25, // €9 per hour / 4
             hour: 9.00,
             day: 50.00
             // No weekly rate available
@@ -64,7 +63,6 @@ export const cars: Car[] = [
         type: "economy",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 2.50, // €10 per hour / 4
             hour: 10.00,      // €9+€1 additional for automatic
             day: 55.00        // €50+€5 additional for automatic
             // No weekly rate available
@@ -78,7 +76,6 @@ export const cars: Car[] = [
         type: "compact",
         transmission: "manual",
         pricing: {
-            fifteenMin: 2.75, // €11 per hour / 4
             hour: 11.00,
             day: 55.00
             // No weekly rate available
@@ -92,7 +89,6 @@ export const cars: Car[] = [
         type: "compact",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,      // €11+€1 additional for automatic
             day: 60.00        // €55+€5 additional for automatic
             // No weekly rate available
@@ -106,7 +102,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "manual",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 60.00
             // No weekly rate available
@@ -120,7 +115,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.25, // €13 per hour / 4
             hour: 13.00,
             day: 65.00
             // No weekly rate available
@@ -134,7 +128,6 @@ export const cars: Car[] = [
         type: "premium",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.75, // €15 per hour / 4
             hour: 15.00,
             day: 80.00
             // No weekly rate available
@@ -151,7 +144,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.50, // €14 per hour / 4
             hour: 14.00,
             day: 70.00
             // No weekly rate available
@@ -165,7 +157,6 @@ export const cars: Car[] = [
         type: "economy",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 2.50, // €10 per hour / 4
             hour: 10.00,
             day: 55.00
             // No weekly rate available
@@ -179,7 +170,6 @@ export const cars: Car[] = [
         type: "van",
         transmission: "manual",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 60.00
             // No weekly rate available
@@ -193,7 +183,6 @@ export const cars: Car[] = [
         type: "premium",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.75, // €15 per hour / 4
             hour: 15.00,
             day: 85.00
             // No weekly rate available
@@ -209,7 +198,6 @@ export const cars: Car[] = [
         type: "economy",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 2.25, // €9 per hour / 4
             hour: 9.00,
             day: 52.00,
             week: 345.00
@@ -226,7 +214,6 @@ export const cars: Car[] = [
         type: "compact",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 2.50, // €10 per hour / 4
             hour: 10.00,
             day: 58.00,
             week: 375.00
@@ -243,7 +230,6 @@ export const cars: Car[] = [
         type: "compact",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 66.00,
             week: 420.00
@@ -260,7 +246,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 66.00,
             week: 420.00
@@ -277,7 +262,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 66.00,
             week: 420.00
@@ -294,7 +278,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.25, // €13 per hour / 4
             hour: 13.00,
             day: 75.00,
             week: 455.00
@@ -311,7 +294,6 @@ export const cars: Car[] = [
         type: "premium",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.25, // €13 per hour / 4
             hour: 13.00,
             day: 75.00,
             week: 455.00
@@ -328,7 +310,6 @@ export const cars: Car[] = [
         type: "premium",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.25, // €13 per hour / 4
             hour: 13.00,
             day: 80.00,
             week: 510.00
@@ -345,7 +326,6 @@ export const cars: Car[] = [
         type: "van",
         transmission: "manual",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 60.00,
             week: 386.00
@@ -362,7 +342,6 @@ export const cars: Car[] = [
         type: "van",
         transmission: "manual",
         pricing: {
-            fifteenMin: 3.25, // €13 per hour / 4
             hour: 13.00,
             day: 69.00,
             week: 430.00
@@ -381,7 +360,6 @@ export const cars: Car[] = [
         type: "economy",
         transmission: "manual",
         pricing: {
-            fifteenMin: 2.25, // €9 per hour / 4
             hour: 9.00,
             day: 50.00,
             week: 330.00
@@ -400,7 +378,6 @@ export const cars: Car[] = [
         type: "economy",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 2.50, // €10 per hour / 4
             hour: 10.00,
             day: 55.00,
             week: 365.00
@@ -419,7 +396,6 @@ export const cars: Car[] = [
         type: "compact",
         transmission: "manual",
         pricing: {
-            fifteenMin: 2.75, // €11 per hour / 4
             hour: 11.00,
             day: 55.00,
             week: 365.00
@@ -438,7 +414,6 @@ export const cars: Car[] = [
         type: "compact",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 2.75, // €11 per hour / 4
             hour: 11.00,
             day: 55.00,
             week: 365.00
@@ -457,7 +432,6 @@ export const cars: Car[] = [
         type: "standard",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 60.00,
             week: 385.00
@@ -476,7 +450,6 @@ export const cars: Car[] = [
         type: "premium",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 60.00,
             week: 385.00
@@ -495,7 +468,6 @@ export const cars: Car[] = [
         type: "van",
         transmission: "automatic",
         pricing: {
-            fifteenMin: 3.00, // €12 per hour / 4
             hour: 12.00,
             day: 60.00,
             week: 420.00
