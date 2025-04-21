@@ -6,8 +6,10 @@
  * - Cars have specific pricing based on rental duration (15 min, hour, day, week)
  */
 
+import { Car, Company } from './types';
+
 // Company data
-const companies = [
+export const companies: Company[] = [
     {
         id: "gocar",
         name: "GoCar",
@@ -39,7 +41,7 @@ const companies = [
 ];
 
 // Car data - includes company-specific cars with their pricing
-const cars = [
+export const cars: Car[] = [
     // GoCar vehicles - pricing from untitled:Untitled-2
     {
         id: "gocar-golocal",
@@ -506,3 +508,14 @@ const cars = [
         notes: "Spacious automatic van"
     }
 ];
+
+// For browser usage
+declare global {
+    var companies: Company[];
+    var cars: Car[];
+}
+
+if (typeof window !== 'undefined') {
+    window.companies = companies;
+    window.cars = cars;
+}
