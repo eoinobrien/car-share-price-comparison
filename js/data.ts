@@ -59,7 +59,7 @@ export const cars: Car[] = [
     },
     {
         id: "gocar-golocal-auto",
-        name: "GoLocal (i10) Automatic",
+        name: "GoLocal (i10)",
         company: "gocar",
         type: "economy",
         transmission: "automatic",
@@ -149,6 +149,7 @@ export const cars: Car[] = [
             day: 70.00
             // No weekly rate available
         },
+        isElectric: true,
         notes: "Fully electric vehicle with automatic transmission"
     },
     {
@@ -162,6 +163,7 @@ export const cars: Car[] = [
             day: 55.00
             // No weekly rate available
         },
+        isElectric: true,
         notes: "Fully electric city cars with automatic transmission"
     },
     {
@@ -281,6 +283,7 @@ export const cars: Car[] = [
             day: 75.00,
             week: 455.00
         },
+        isElectric: true,
         notes: "Electric SUV"
     },
     {
@@ -400,6 +403,7 @@ export const cars: Car[] = [
             day: 60.00,
             week: 385.00
         },
+        isElectric: true,
         notes: "Electric vehicle"
     },
     {

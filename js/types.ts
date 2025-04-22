@@ -29,6 +29,7 @@ export interface Car {
   pricing: CarPricing;
   freeKmPolicy?: FreeKmPolicy; // Optional car-specific overrides
   pricePerExtraKm?: number; // Optional car-specific override
+  isElectric?: boolean;
   notes?: string; // Optional additional information
 }
 
