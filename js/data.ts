@@ -32,6 +32,7 @@ export const companies: Company[] = [
         name: "Drive You",
         // Drive You has different free km policies based on rental duration
         freeKmPolicy: {
+            quarterHours: 3, // 3km free per fifteen minutes
             hourly: 15,   // 15km free per hour
             daily: 50,    // 50km free per day
             weekly: 300   // 300km free per week
@@ -202,9 +203,6 @@ export const cars: Car[] = [
             day: 52.00,
             week: 345.00
         },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
-        },
         notes: "Compact city car"
     },
     {
@@ -217,9 +215,6 @@ export const cars: Car[] = [
             hour: 10.00,
             day: 58.00,
             week: 375.00
-        },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
         },
         notes: "Reliable compact car"
     },
@@ -234,9 +229,6 @@ export const cars: Car[] = [
             day: 66.00,
             week: 420.00
         },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
-        },
         notes: "Compact crossover SUV"
     },
     {
@@ -249,9 +241,6 @@ export const cars: Car[] = [
             hour: 12.00,
             day: 66.00,
             week: 420.00
-        },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
         },
         notes: "Spacious hatchback"
     },
@@ -266,9 +255,6 @@ export const cars: Car[] = [
             day: 66.00,
             week: 420.00
         },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
-        },
         notes: "Comfortable saloon"
     },
     {
@@ -281,9 +267,6 @@ export const cars: Car[] = [
             hour: 13.00,
             day: 75.00,
             week: 455.00
-        },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
         },
         notes: "Stylish crossover"
     },
@@ -298,9 +281,6 @@ export const cars: Car[] = [
             day: 75.00,
             week: 455.00
         },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
-        },
         notes: "Electric SUV"
     },
     {
@@ -313,9 +293,6 @@ export const cars: Car[] = [
             hour: 13.00,
             day: 80.00,
             week: 510.00
-        },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
         },
         notes: "Crossover SUV"
     },
@@ -330,9 +307,6 @@ export const cars: Car[] = [
             day: 60.00,
             week: 386.00
         },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
-        },
         notes: "Compact van"
     },
     {
@@ -345,9 +319,6 @@ export const cars: Car[] = [
             hour: 13.00,
             day: 69.00,
             week: 430.00
-        },
-        freeKmPolicy: {
-            weekly: 300 // 300km free per week
         },
         notes: "Long wheel base van"
     },
@@ -364,11 +335,6 @@ export const cars: Car[] = [
             day: 50.00,
             week: 330.00
         },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
-        },
         notes: "Compact economy car"
     },
     {
@@ -381,11 +347,6 @@ export const cars: Car[] = [
             hour: 10.00,
             day: 55.00,
             week: 365.00
-        },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
         },
         notes: "Compact automatic economy car"
     },
@@ -400,11 +361,6 @@ export const cars: Car[] = [
             day: 55.00,
             week: 365.00
         },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
-        },
         notes: "Small cars, perfect for city driving"
     },
     {
@@ -417,11 +373,6 @@ export const cars: Car[] = [
             hour: 11.00,
             day: 55.00,
             week: 365.00
-        },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
         },
         notes: "Small cars, perfect for city driving"
     },
@@ -436,11 +387,6 @@ export const cars: Car[] = [
             day: 60.00,
             week: 385.00
         },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
-        },
         notes: "Midsize automatic car"
     },
     {
@@ -454,11 +400,6 @@ export const cars: Car[] = [
             day: 60.00,
             week: 385.00
         },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
-        },
         notes: "Electric vehicle"
     },
     {
@@ -471,11 +412,6 @@ export const cars: Car[] = [
             hour: 12.00,
             day: 60.00,
             week: 420.00
-        },
-        freeKmPolicy: {
-            hourly: 15,  // 15km free per hour
-            daily: 50,   // 50km free per day
-            weekly: 300  // 300km free per week
         },
         notes: "Spacious automatic van"
     }

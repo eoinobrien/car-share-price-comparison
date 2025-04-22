@@ -10,9 +10,10 @@ export interface CarPricing {
 
 export enum KmPolicyType {
   standard = "standard",
+  quarterHours = "quarterHours",
   hourly = "hourly",
   daily = "daily",
-  weekly = "weekly"
+  weekly = "weekly",
 }
 
 export type FreeKmPolicy = {
@@ -44,7 +45,6 @@ export interface PriceCalculationResult {
   totalPrice: number;
   freeKm: number;
   pricePerExtraKm: number;
-  policyType: KmPolicyType;
   pricingTier: string;
 }
 

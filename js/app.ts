@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * Display car price result in the UI
      */
     function displayCarResult(result: PriceResultWithDetails, isBestDeal: boolean = false): void {
-        const { car, company, timeCost, distanceCost, totalPrice, freeKm, pricePerExtraKm, policyType, pricingTier } = result;
+        const { car, company, timeCost, distanceCost, totalPrice, freeKm, pricePerExtraKm, pricingTier } = result;
         
         // Create result card element
         const cardElement = document.createElement('div');
@@ -303,24 +303,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Create free km display message
         let freeKmMessage = `${freeKm} km`;
-        
-        // Add policy information for Drive You's duration-based policies
-        if (company.id === 'driveyou') {
-            switch(policyType) {
-                case 'hourly':
-                    const hourlyRate = car.freeKmPolicy?.hourly || company.freeKmPolicy.hourly;
-                    freeKmMessage = `${freeKm} km (${hourlyRate} per hour)`;
-                    break;
-                case 'daily':
-                    const dailyRate = car.freeKmPolicy?.daily || company.freeKmPolicy.daily;
-                    freeKmMessage = `${freeKm} km (${dailyRate} per day)`;
-                    break;
-                case 'weekly':
-                    const weeklyRate = car.freeKmPolicy?.weekly || company.freeKmPolicy.weekly;
-                    freeKmMessage = `${freeKm} km (${weeklyRate} per week)`;
-                    break;
-            }
-        }
         
         // Populate card with car details and prices
         cardElement.innerHTML = `

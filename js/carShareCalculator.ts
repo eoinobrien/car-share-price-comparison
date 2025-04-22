@@ -5,14 +5,14 @@
  * to improve testability and separation of concerns.
  */
 
-import { Car, Company, KmPolicyType, PriceCalculationResult } from "./types";
+import { Car, Company, PriceCalculationResult } from "./types";
 
 const HOURS_PER_DAY = 24;
 const HOURS_PER_WEEK = 168;
 
 const CarShareCalculator = {
   /**
-   * Calculate price for a specific car
+   * Calculate price for a specific car using unified time breakdown approach
    */
   calculateCarPrice: function (
     car: Car,
@@ -20,16 +20,12 @@ const CarShareCalculator = {
     duration: number,
     kilometers: number
   ): PriceCalculationResult {
-    // Calculate time-based costs
-    const timeCalculation = this.calculateTimeCost(car, duration);
-    const timeCost = timeCalculation.cost;
-    const pricingTier = timeCalculation.tier;
-
-    // Determine free kilometers policy
-    const kmPolicyResult = this.determineFreeKmPolicy(car, company, duration);
-    const freeKm = kmPolicyResult.freeKm;
-    const policyType = kmPolicyResult.policyType;
-
+    // Calculate time breakdown and time-based costs in one pass
+    const timeBreakdown = this.calculateTimeBreakdown(car, duration);
+    
+    // Calculate free km based on the same time breakdown
+    const freeKm = this.calculateFreeKmFromTimeBreakdown(car, company, timeBreakdown);
+    
     // Determine price per extra km
     const pricePerExtraKm =
       car.pricePerExtraKm !== undefined
@@ -41,144 +37,188 @@ const CarShareCalculator = {
       kilometers > freeKm ? (kilometers - freeKm) * pricePerExtraKm : 0;
 
     // Calculate total price
-    const totalPrice = timeCost + distanceCost;
+    const totalPrice = timeBreakdown.cost + distanceCost;
 
     return {
-      timeCost,
+      timeCost: timeBreakdown.cost,
       distanceCost,
       totalPrice,
       freeKm,
       pricePerExtraKm,
-      policyType,
-      pricingTier,
+      pricingTier: timeBreakdown.tier,
     };
   },
 
   /**
-   * Calculate time-based cost based on duration
+   * Calculate time breakdown into weeks, days, hours, and quarter hours
+   * This is a unified function that returns both the cost and time components
    */
-  calculateTimeCost: function (
+  calculateTimeBreakdown: function (
     car: Car,
     duration: number
-  ): { cost: number; tier: string } {
+  ): {
+    weeks: number;
+    days: number;
+    hours: number;
+    quarterHours: number;
+    cost: number;
+    tier: string;
+  } {
     // Short trip (1 hour or less)
     if (duration <= 1) {
       return {
+        weeks: 0,
+        days: 0,
+        hours: 1,
+        quarterHours: 0,
         cost: car.pricing.hour,
         tier: "1 hour (minimum)",
       };
     }
-    // Medium trip (1-24 hours)
-    else if (duration < HOURS_PER_DAY) {
-      return this.calculateHourlyRate(car, duration);
-    }
-    // Longer trip (1-7 days)
-    else if (duration < HOURS_PER_WEEK) {
-      return this.calculateDailyRate(car, duration);
-    }
-    // Extended trip (>7 days)
-    else {
-      return this.calculateWeeklyRate(car, duration);
-    }
-  },
-
-  /**
-   * Calculate hourly rate for 1-24 hour durations
-   */
-  calculateHourlyRate: function (
-    car: Car,
-    duration: number
-  ): { cost: number; tier: string } {
-    // For durations > 1 hour, round up to the nearest 15-minute increment (0.25 hour)
-    const quarteredDuration = Math.ceil(duration * 4) / 4;
     
-    // If duration is not a whole hour, calculate using 15-minute increments
-    let hourlyPrice: number;
-    if (Number.isInteger(quarteredDuration)) {
-      // Whole hours
-      hourlyPrice = quarteredDuration * car.pricing.hour;
-    } else {
-      // Mixed hours and 15-minute increments
-      const wholeHours = Math.floor(quarteredDuration);
-      const quarterHours = Math.round((quarteredDuration - wholeHours) * 4); // Number of 15-minute blocks
+    // For durations > 1 hour, calculate all components
+    let weeks = 0;
+    let days = 0;
+    let hours = 0;
+    let quarterHours = 0;
+    let cost = 0;
+    let tierParts: string[] = [];
+    
+    // Calculate raw time breakdown
+    if (duration >= HOURS_PER_WEEK && car.pricing.week) {
+      // Handle weekly component if available
+      weeks = Math.floor(duration / HOURS_PER_WEEK);
+      duration = duration % HOURS_PER_WEEK;
       
-      // Calculate cost: whole hours plus quarter-hour increments
-      hourlyPrice = (wholeHours * car.pricing.hour) + (quarterHours * (car.pricing.hour / 4));
-    }
-
-    // Check if daily rate would be cheaper than hourly
-    if (car.pricing.day && car.pricing.day < hourlyPrice) {
-      // Daily rate is cheaper
-      return {
-        cost: car.pricing.day,
-        tier: "1 day",
-      };
-    } else {
-      // Format the duration to display
-      let tier;
-      if (Number.isInteger(quarteredDuration)) {
-        // Whole hours (e.g., 2 hours)
-        tier = `${quarteredDuration} hour${quarteredDuration > 1 ? "s" : ""}`;
-      } else {
-        // Fractional hours (e.g., 1.25 hours or 2.5 hours)
-        const formattedDuration = quarteredDuration
-          .toFixed(2)
-          .replace(/\.00$/, "")
-          .replace(/0+$/, "");
-        tier = `${formattedDuration} hours`;
+      const weeksCost = weeks * car.pricing.week;
+      cost += weeksCost;
+      if (weeks > 0) {
+        tierParts.push(`${weeks} week${weeks > 1 ? 's' : ''}`);
       }
-
-      return {
-        cost: hourlyPrice,
-        tier,
-      };
     }
+    
+    // Handle days component
+    if (duration >= HOURS_PER_DAY) {
+      days = Math.floor(duration / HOURS_PER_DAY);
+      duration = duration % HOURS_PER_DAY;
+      
+      const daysCost = days * car.pricing.day;
+      cost += daysCost;
+      if (days > 0) {
+        tierParts.push(`${days} day${days > 1 ? 's' : ''}`);
+      }
+    }
+    
+    // Handle remaining hours and minutes (quarter hours)
+    if (duration > 0) {
+      // Round up to the nearest quarter hour
+      const quarteredDuration = Math.ceil(duration * 4) / 4;
+      hours = Math.floor(quarteredDuration);
+      quarterHours = Math.round((quarteredDuration - hours) * 4); // 0-3 representing 0, 15, 30, 45 minutes
+      
+      // Calculate cost for hours and quarter hours
+      const hoursCost = hours * car.pricing.hour;
+      const quarterHoursCost = quarterHours * (car.pricing.hour / 4);
+      cost += hoursCost + quarterHoursCost;
+      
+      // Add to tier string
+      if (hours > 0) {
+        tierParts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+      }
+      if (quarterHours > 0) {
+        tierParts.push(`${quarterHours * 15} min${quarterHours > 1 ? 's' : ''}`);
+      }
+    }
+    
+    // Apply optimizations (check if using a higher tier rate is cheaper)
+    
+    // Check if using another day would be cheaper than hours + quarter hours
+    if (hours > 0 && car.pricing.day < (hours * car.pricing.hour + quarterHours * (car.pricing.hour / 4))) {
+      // Adding a day is cheaper than using hours
+      days += 1;
+      cost = (weeks * (car.pricing.week || 0)) + (days * car.pricing.day);
+      tierParts = [];
+      if (weeks > 0) tierParts.push(`${weeks} week${weeks > 1 ? 's' : ''}`);
+      if (days > 0) tierParts.push(`${days} day${days > 1 ? 's' : ''}`);
+      hours = 0;
+      quarterHours = 0;
+    }
+    
+    // Check if using another week would be cheaper than days + hours
+    if (car.pricing.week && days > 0 && 
+        car.pricing.week < (days * car.pricing.day + hours * car.pricing.hour + quarterHours * (car.pricing.hour / 4))) {
+      // Adding a week is cheaper than using days + hours
+      weeks += 1;
+      cost = weeks * car.pricing.week;
+      tierParts = [`${weeks} week${weeks > 1 ? 's' : ''}`];
+      days = 0;
+      hours = 0;
+      quarterHours = 0;
+    }
+    
+    return {
+      weeks,
+      days,
+      hours,
+      quarterHours,
+      cost,
+      tier: tierParts.join(' + ')
+    };
   },
 
   /**
-   * Calculate daily rate for 1-7 day durations
+   * Calculate free kilometers based on time breakdown
    */
-  calculateDailyRate: function (
+  calculateFreeKmFromTimeBreakdown: function (
     car: Car,
-    duration: number
-  ): { cost: number; tier: string } {
-    // Calculate days and remaining hours
-    const days = Math.floor(duration / HOURS_PER_DAY);
-    const remainingHours = duration % HOURS_PER_DAY;
-
-    // Calculate price for full days
-    const fullDaysPrice = days * car.pricing.day;
-
-    // If no remaining hours, just return the full days price
-    if (remainingHours === 0) {
-      return {
-        cost: fullDaysPrice,
-        tier: `${days} day${days > 1 ? "s" : ""}`,
-      };
+    company: Company,
+    timeBreakdown: { 
+      weeks: number; 
+      days: number; 
+      hours: number; 
+      quarterHours: number; 
     }
+  ): number {
+    const companyPolicy = company.freeKmPolicy;
+    const carPolicy = car.freeKmPolicy;
+    
+    // Use the policy hierarchy: car-specific policy overrides company policy
+    const policy = {
+      quarterHours: carPolicy?.quarterHours !== undefined ? carPolicy.quarterHours : companyPolicy.quarterHours,
+      weekly: carPolicy?.weekly !== undefined ? carPolicy.weekly : companyPolicy.weekly,
+      daily: carPolicy?.daily !== undefined ? carPolicy.daily : companyPolicy.daily,
+      hourly: carPolicy?.hourly !== undefined ? carPolicy.hourly : companyPolicy.hourly,
+      standard: carPolicy?.standard !== undefined ? carPolicy.standard : companyPolicy.standard
+    };
+    
+    let totalFreeKm = 0;
 
-    // Calculate price for remaining hours
-    const remainingHoursPrice = remainingHours * car.pricing.hour;
-    const combinedPrice = fullDaysPrice + remainingHoursPrice;
-
-    // Check if using one more full day is cheaper than day + hours
-    const nextFullDayPrice = (days + 1) * car.pricing.day;
-
-    if (nextFullDayPrice <= combinedPrice) {
-      // Using full days is cheaper or same cost
-      return {
-        cost: nextFullDayPrice,
-        tier: `${days + 1} day${days + 1 > 1 ? "s" : ""}`,
-      };
-    } else {
-      // Using days + hours is cheaper
-      return {
-        cost: combinedPrice,
-        tier: `${days} day${days > 1 ? "s" : ""} + ${this.formatTimeComponent(
-          remainingHours
-        )}`,
-      };
+    // Add weekly allocation
+    if (timeBreakdown.weeks > 0 && policy.weekly !== undefined) {
+      totalFreeKm += timeBreakdown.weeks * policy.weekly;
     }
+    
+    // Add daily allocation
+    if (timeBreakdown.days > 0 && policy.daily !== undefined) {
+      totalFreeKm += timeBreakdown.days * policy.daily;
+    }
+    
+    // Add hourly allocation
+    if (timeBreakdown.hours > 0 && policy.hourly !== undefined) {
+      totalFreeKm += timeBreakdown.hours * policy.hourly;
+    }
+    
+    // Add quarter-hour allocation (if policy supports it)
+    if (timeBreakdown.quarterHours > 0 && policy.quarterHours !== undefined) {
+      totalFreeKm += timeBreakdown.quarterHours * policy.quarterHours;
+    }
+    
+    // If no specific allocations or total is 0, use standard
+    if (totalFreeKm === 0 && policy.standard !== undefined) {
+      totalFreeKm = policy.standard;
+    }
+    
+    return Math.round(totalFreeKm);
   },
 
   /**
@@ -200,154 +240,6 @@ const CarShareCalculator = {
         .replace(/0+$/, "");
       return `${formattedHours} hours`;
     }
-  },
-
-  /**
-   * Calculate weekly rate for durations longer than 7 days
-   */
-  calculateWeeklyRate: function (
-    car: Car,
-    duration: number
-  ): { cost: number; tier: string } {
-    const weeks = Math.floor(duration / HOURS_PER_WEEK);
-    const remainingHours = duration % HOURS_PER_WEEK;
-
-    // Check if weekly pricing is available
-    if (car.pricing.week) {
-      // Weekly rate for full weeks
-      let weeksCost = weeks * car.pricing.week;
-      let remainingCost = 0;
-      let tier = `${weeks} week${weeks > 1 ? "s" : ""}`;
-
-      if (remainingHours > 0) {
-        // For the remaining time, determine the best pricing option
-        if (remainingHours <= 24) {
-          // For remaining time up to 1 day
-          if (remainingHours === 24) {
-            // Exactly one day
-            remainingCost = car.pricing.day;
-            tier += ` + 1 day`;
-          } else {
-            // Less than a day - use hourly rate
-            remainingCost = remainingHours * car.pricing.hour;
-            tier += ` + ${this.formatTimeComponent(remainingHours)}`;
-          }
-        } else {
-          // For remaining time more than 1 day
-          const days = Math.floor(remainingHours / 24);
-          const extraHours = remainingHours % 24;
-
-          // Calculate cost for full days
-          const daysCost = days * car.pricing.day;
-
-          // Calculate cost for remaining hours if any
-          let extraHoursCost = 0;
-          if (extraHours > 0) {
-            extraHoursCost = extraHours * car.pricing.hour;
-            // Check if another full day is cheaper
-            if (car.pricing.day < extraHoursCost) {
-              extraHoursCost = car.pricing.day;
-              tier += ` + ${days + 1} day${days + 1 > 1 ? "s" : ""}`;
-            } else {
-              tier += ` + ${days} day${
-                days > 1 ? "s" : ""
-              } + ${this.formatTimeComponent(extraHours)}`;
-            }
-          } else {
-            tier += ` + ${days} day${days > 1 ? "s" : ""}`;
-          }
-
-          remainingCost = daysCost + extraHoursCost;
-        }
-
-        // Check if another full week would be cheaper than week + remaining time
-        if (car.pricing.week <= remainingCost) {
-          weeksCost += car.pricing.week;
-          remainingCost = 0;
-          tier = `${weeks + 1} week${weeks + 1 > 1 ? "s" : ""}`;
-        }
-      }
-
-      return {
-        cost: weeksCost + remainingCost,
-        tier,
-      };
-    } else {
-      // No weekly rate, fall back to daily rate
-      const totalDays = Math.ceil(duration / HOURS_PER_DAY);
-      return {
-        cost: totalDays * car.pricing.day,
-        tier: `${totalDays} day${totalDays > 1 ? "s" : ""} (no weekly rate)`,
-      };
-    }
-  },
-
-  /**
-   * Determine free kilometer policy and calculate free kilometers
-   */
-  determineFreeKmPolicy: function (
-    car: Car,
-    company: Company,
-    duration: number
-  ): {
-    freeKm: number;
-    policyType: KmPolicyType;
-  } {
-    let policyType: KmPolicyType = KmPolicyType.standard;
-    let unitCount: number = 1;
-
-    // For companies with duration-based free km policies
-    if (company.freeKmPolicy.hourly && duration <= HOURS_PER_DAY) {
-      policyType = KmPolicyType.hourly;
-      unitCount = duration;
-    } else if (company.freeKmPolicy.daily && duration <= HOURS_PER_WEEK) {
-      policyType = KmPolicyType.daily;
-      unitCount = duration / HOURS_PER_DAY;
-    } else if (company.freeKmPolicy.weekly && duration > HOURS_PER_DAY) {
-      policyType = KmPolicyType.weekly;
-      unitCount = duration / HOURS_PER_WEEK;
-    } else {
-      // Default to standard policy when no specific duration policy applies
-      policyType = KmPolicyType.standard;
-      unitCount = 1;
-    }
-
-    // Calculate free kilometers based on the determined policy
-    const freeKm = this.calculateFreeKm(car, company, unitCount, policyType);
-
-    return { freeKm, policyType };
-  },
-
-  /**
-   * Calculate free kilometers based on policy type and duration
-   */
-  calculateFreeKm: function (
-    car: Car,
-    company: Company,
-    unitCount: number,
-    policyType: KmPolicyType
-  ): number {
-    // Get the base rate from company policy
-    const baseRate = company.freeKmPolicy[policyType];
-
-    // If the policy doesn't exist, return 0
-    if (baseRate === undefined) {
-      return 0;
-    }
-
-    // Check if car has override for this policy type
-    let specificRate = baseRate;
-    if (car.freeKmPolicy && car.freeKmPolicy[policyType] !== undefined) {
-      specificRate = car.freeKmPolicy[policyType]!;
-    }
-
-    // For standard policy, we don't multiply by duration
-    if (policyType === "standard") {
-      return specificRate;
-    }
-
-    // For duration-based policies, calculate total free km based on duration
-    return Math.round(specificRate * unitCount);
   },
 
   /**
