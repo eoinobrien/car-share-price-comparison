@@ -1,4 +1,11 @@
 const path = require('path');
+const fs = require('fs-extra');
+
+// Copy index.html to dist on webpack execution
+fs.copySync(
+  path.join(__dirname, 'index.html'),
+  path.join(__dirname, 'dist', 'index.html')
+);
 
 module.exports = {
   mode: 'development', // Change to 'production' for minified output

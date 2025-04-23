@@ -26,7 +26,10 @@
     "test": "jest",
     "build": "webpack && node build.js",
     "start": "npm run build && http-server -c-1 ./dist",
-    "dev": "start webpack --watch && start http-server -c-1 ."
+    "dev:webpack": "webpack --watch",
+    "dev:copy": "node build.js",
+    "dev:serve": "http-server -c-1 ./dist",
+    "dev": "start npm run dev:webpack && start npm run dev:copy && start npm run dev:serve"
   },
   "keywords": [],
   "author": "",
