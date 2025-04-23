@@ -383,7 +383,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </h3>
             <div class="details">
                 <div>${CarShareCalculator.capitalizeFirstLetter(car.type)}</div>
-                <div>${freeKmMessage} free | ${formatCurrency(pricePerExtraKm)} per extra KM</div>
+                <div>${freeKmMessage} free (${formatCurrency(pricePerExtraKm)} per extra KM)</div>
             </div>
             <div class="price">${formatCurrency(totalPrice)}</div>
             <div class="breakdown">
