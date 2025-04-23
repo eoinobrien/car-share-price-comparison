@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Share Price Comparison</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <header>
         <h1>Car Share Price Comparison</h1>
@@ -34,7 +36,7 @@
                 <!-- Advanced filters section (hidden initially) -->
                 <div class="filter-controls">
                     <button type="button" id="filter-toggle" class="filter-toggle">Show More Options</button>
-                    
+
                     <div id="advanced-filters" class="advanced-filters">
                         <div class="form-group">
                             <fieldset class="filter-group">
@@ -67,22 +69,48 @@
                                 </div>
                             </fieldset>
                         </div>
-                        
+
                         <div class="form-group">
                             <fieldset class="filter-group">
                                 <legend>Transmission:</legend>
                                 <div class="checkbox-group" id="transmission">
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="transmission-all" name="transmission" value="all" checked>
+                                        <input type="checkbox" id="transmission-all" name="transmission" value="all"
+                                            checked>
                                         <label for="transmission-all">All</label>
                                     </div>
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="transmission-automatic" name="transmission" value="automatic">
+                                        <input type="checkbox" id="transmission-automatic" name="transmission"
+                                            value="automatic">
                                         <label for="transmission-automatic">Automatic</label>
                                     </div>
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="transmission-manual" name="transmission" value="manual">
+                                        <input type="checkbox" id="transmission-manual" name="transmission"
+                                            value="manual">
                                         <label for="transmission-manual">Manual</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="form-group">
+                            <fieldset class="filter-group">
+                                <legend>Fuel Type:</legend>
+                                <div class="checkbox-group" id="fuel-type">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="fuel-type-all" name="fuel-type" value="all"
+                                            checked>
+                                        <label for="fuel-type-all">All</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="fuel-type-petrol-diesel" name="fuel-type"
+                                            value="petrol-diesel">
+                                        <label for="fuel-type-petrol-diesel">Petrol/Diesel</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="fuel-type-electric" name="fuel-type"
+                                            value="electric">
+                                        <label for="fuel-type-electric">Electric</label>
                                     </div>
                                 </div>
                             </fieldset>
@@ -105,13 +133,13 @@
                     </select>
                 </div>
             </div>
-            
+
             <!-- Loading indicator -->
             <div id="loading-indicator" class="loading-indicator">
                 <div class="spinner"></div>
                 <p>Finding the best car share deals...</p>
             </div>
-            
+
             <div id="results-container" class="results-grid"></div>
         </section>
     </main>
@@ -122,4 +150,5 @@
 
     <script src="bundle.js"></script>
 </body>
+
 </html>

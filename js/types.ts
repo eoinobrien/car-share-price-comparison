@@ -25,11 +25,11 @@ export interface Car {
   name: string;
   type: "economy" | "standard" | "premium" | "compact" | "van";
   transmission: "manual" | "automatic";
+  fuelType: "petrol-diesel" | "electric";
   company: string;
   pricing: CarPricing;
   freeKmPolicy?: FreeKmPolicy; // Optional car-specific overrides
   pricePerExtraKm?: number; // Optional car-specific override
-  isElectric?: boolean;
   notes?: string; // Optional additional information
 }
 

@@ -50,6 +50,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "economy",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 9.00,
             day: 50.00
@@ -63,6 +64,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "economy",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 10.00,      // €9+€1 additional for automatic
             day: 55.00        // €50+€5 additional for automatic
@@ -76,6 +78,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "compact",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 11.00,
             day: 55.00
@@ -89,6 +92,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "compact",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,      // €11+€1 additional for automatic
             day: 60.00        // €55+€5 additional for automatic
@@ -102,6 +106,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "standard",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 60.00
@@ -115,6 +120,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "standard",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 13.00,
             day: 65.00
@@ -128,6 +134,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "premium",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 15.00,
             day: 80.00
@@ -144,12 +151,12 @@ export const cars: Car[] = [
         company: "gocar",
         type: "standard",
         transmission: "automatic",
+        fuelType: "electric",
         pricing: {
             hour: 14.00,
             day: 70.00
             // No weekly rate available
         },
-        isElectric: true,
         notes: "Fully electric vehicle with automatic transmission"
     },
     {
@@ -158,12 +165,12 @@ export const cars: Car[] = [
         company: "gocar",
         type: "economy",
         transmission: "automatic",
+        fuelType: "electric",
         pricing: {
             hour: 10.00,
             day: 55.00
             // No weekly rate available
         },
-        isElectric: true,
         notes: "Fully electric city cars with automatic transmission"
     },
     {
@@ -172,6 +179,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "van",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 60.00
@@ -185,6 +193,7 @@ export const cars: Car[] = [
         company: "gocar",
         type: "premium",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 15.00,
             day: 85.00
@@ -200,6 +209,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "economy",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 9.00,
             day: 52.00,
@@ -213,6 +223,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "compact",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 10.00,
             day: 58.00,
@@ -226,6 +237,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "compact",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 66.00,
@@ -239,6 +251,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "standard",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 66.00,
@@ -252,6 +265,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "standard",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 66.00,
@@ -265,6 +279,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "standard",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 13.00,
             day: 75.00,
@@ -278,12 +293,12 @@ export const cars: Car[] = [
         company: "yuko",
         type: "premium",
         transmission: "automatic",
+        fuelType: "electric",
         pricing: {
             hour: 13.00,
             day: 75.00,
             week: 455.00
         },
-        isElectric: true,
         notes: "Electric SUV"
     },
     {
@@ -292,6 +307,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "premium",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 13.00,
             day: 80.00,
@@ -305,6 +321,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "van",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 60.00,
@@ -318,6 +335,7 @@ export const cars: Car[] = [
         company: "yuko",
         type: "van",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 13.00,
             day: 69.00,
@@ -333,6 +351,7 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "economy",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 9.00,
             day: 50.00,
@@ -346,6 +365,7 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "economy",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 10.00,
             day: 55.00,
@@ -359,6 +379,7 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "compact",
         transmission: "manual",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 11.00,
             day: 55.00,
@@ -372,6 +393,7 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "compact",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 11.00,
             day: 55.00,
@@ -385,6 +407,7 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "standard",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 60.00,
@@ -398,12 +421,12 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "premium",
         transmission: "automatic",
+        fuelType: "electric",
         pricing: {
             hour: 12.00,
             day: 60.00,
             week: 385.00
         },
-        isElectric: true,
         notes: "Electric vehicle"
     },
     {
@@ -412,6 +435,7 @@ export const cars: Car[] = [
         company: "driveyou",
         type: "van",
         transmission: "automatic",
+        fuelType: "petrol-diesel",
         pricing: {
             hour: 12.00,
             day: 60.00,

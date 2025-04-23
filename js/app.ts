@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const transmissionContainer = document.getElementById(
     "transmission"
   ) as HTMLDivElement;
+  const fuelTypeContainer = document.getElementById(
+    "fuel-type"
+  ) as HTMLDivElement;
   const resultsContainer = document.getElementById(
     "results-container"
   ) as HTMLDivElement;
@@ -43,6 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
     'input[type="checkbox"]'
   ) as NodeListOf<HTMLInputElement>;
   const transmissionCheckboxes = transmissionContainer.querySelectorAll(
+    'input[type="checkbox"]'
+  ) as NodeListOf<HTMLInputElement>;
+  const fuelTypeCheckboxes = fuelTypeContainer.querySelectorAll(
     'input[type="checkbox"]'
   ) as NodeListOf<HTMLInputElement>;
 
@@ -106,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Set up checkbox logic for both filters
   setupFilterCheckboxes(carTypeCheckboxes);
   setupFilterCheckboxes(transmissionCheckboxes);
+  setupFilterCheckboxes(fuelTypeCheckboxes);
 
   // Initialize advanced filters toggle
   filterToggle.addEventListener("click", function () {
@@ -194,9 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const duration = parseFloat(durationInput.value);
     const kilometers = parseFloat(kilometersInput.value);
     const selectedCarTypes = getSelectedCheckboxValues(carTypeCheckboxes);
-    const selectedTransmissions = getSelectedCheckboxValues(
-      transmissionCheckboxes
-    );
+    const selectedTransmissions = getSelectedCheckboxValues(transmissionCheckboxes);
+    const selectedFuelTypes = getSelectedCheckboxValues(fuelTypeCheckboxes);
 
     // Validate inputs
     const isDurationValid = validateInput(durationInput);
@@ -232,6 +238,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!selectedTransmissions.includes("all")) {
       filteredCars = filteredCars.filter((car) =>
         selectedTransmissions.includes(car.transmission)
+      );
+    }
+
+    // Apply fuel-type filter (if 'all' is selected, don't filter)
+    if (!selectedFuelTypes.includes("all")) {
+      filteredCars = filteredCars.filter((car) =>
+        selectedFuelTypes.includes(car.transmission)
       );
     }
 
@@ -375,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'><title>Automatic transmission</title><path d='M276-280h76l40-112h176l40 112h76L520-720h-80zm138-176 64-182h4l64 182zm66 376q-83 0-156-31.5T197-197t-85.5-127T80-480t31.5-156T197-763t127-85.5T480-880t156 31.5T763-763t85.5 127T880-480t-31.5 156T763-197t-127 85.5T480-80m0-80q133 0 226.5-93.5T800-480t-93.5-226.5T480-800t-226.5 93.5T160-480t93.5 226.5T480-160'/></svg>"
                     }
                     ${
-                        car.isElectric
+                        car.fuelType == "electric"
                         ? "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'><title>Electric car</title><path d='m280-80 160-300-320-40 480-460h80L520-580l320 40L360-80zm222-247 161-154-269-34 63-117-160 154 268 33zm-22-153'/></svg>"
                         : ""
                     }
@@ -449,6 +462,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const kilometers = parseFloat(kilometersInput.value);
     const selectedCarTypes = getSelectedCheckboxValues(carTypeCheckboxes);
     const selectedTransmissions = getSelectedCheckboxValues(
+      transmissionCheckboxes
+    );
+    const selectedFuelType = getSelectedCheckboxValues(
       transmissionCheckboxes
     );
 

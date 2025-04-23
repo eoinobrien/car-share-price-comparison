@@ -14,6 +14,7 @@ const mockCars: Record<string, Car> = {
     name: "EconoTest",
     type: "economy",
     transmission: "manual",
+    fuelType: "petrol-diesel",
     company: "gocar",
     pricing: {
       hour: 8,
@@ -26,6 +27,7 @@ const mockCars: Record<string, Car> = {
     name: "PremiumTest",
     type: "premium",
     transmission: "automatic",
+    fuelType: "petrol-diesel",
     company: "driveyou",
     pricing: {
       hour: 12,
@@ -42,6 +44,7 @@ const mockCars: Record<string, Car> = {
     name: "StandardTest",
     type: "standard",
     transmission: "manual",
+    fuelType: "petrol-diesel",
     company: "yuko",
     pricing: {
       hour: 10,
@@ -55,13 +58,14 @@ const mockCars: Record<string, Car> = {
     name: "CompactTest",
     type: "compact",
     transmission: "manual",
+    fuelType: "petrol-diesel",
     company: "gocar",
     pricing: {
       hour: 7,
       day: 40,
       week: 240,
     },
-    pricePerExtraKm: 0.30, // Custom price per extra km
+    pricePerExtraKm: 0.3, // Custom price per extra km
   },
 };
 
@@ -104,7 +108,7 @@ describe("CarShareCalculator", () => {
         1, // 1 hour
         30 // 30 km (within free km limit)
       );
-      
+
       expect(result.timeCost).toBe(8); // hourly rate
       expect(result.distanceCost).toBe(0); // no extra km
       expect(result.totalPrice).toBe(8);
@@ -118,7 +122,7 @@ describe("CarShareCalculator", () => {
         1, // 1 hour
         70 // 70 km (20 km over free limit)
       );
-      
+
       expect(result.timeCost).toBe(8); // hourly rate
       expect(result.freeKm).toBe(50); // standard policy
       expect(result.distanceCost).toBe(5); // 20 km × 0.25
@@ -132,7 +136,7 @@ describe("CarShareCalculator", () => {
         1,
         70 // 20 km over free limit
       );
-      
+
       expect(result.timeCost).toBe(7); // hourly rate
       expect(result.pricePerExtraKm).toBe(0.3); // car-specific rate
       expect(result.distanceCost).toBe(6); // 20 km × 0.30
@@ -146,7 +150,7 @@ describe("CarShareCalculator", () => {
         1, // 1 hour
         25 // 25 km (5 km over the car's custom hourly limit)
       );
-      
+
       expect(result.freeKm).toBe(20); // Car-specific hourly policy
       expect(result.distanceCost).toBe(1.25); // 5 km × 0.25
     });

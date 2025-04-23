@@ -175,7 +175,7 @@ select:focus {
 }
 
 .advanced-filters.show {
-    max-height: 300px; /* Increased to accommodate more content */
+    max-height: 600px; Increased to accommodate more content
 }
 
 .advanced-filters .form-group {
@@ -197,7 +197,7 @@ button {
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #bde5ff;
 }
 
 button:active {
@@ -292,7 +292,7 @@ button:active {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #fbfbfb;
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
     overflow: hidden;
