@@ -1,11 +1,6 @@
 const path = require('path');
 const fs = require('fs-extra');
-
-// Copy index.html to dist on webpack execution
-fs.copySync(
-  path.join(__dirname, 'index.html'),
-  path.join(__dirname, 'dist', 'index.html')
-);
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development', // Change to 'production' for minified output
@@ -17,6 +12,10 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   resolve: {
@@ -27,5 +26,19 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '',
   },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'index.html' },
+        { from: 'css', to: 'css' },
+        { from: 'images', to: 'images' },
+      ],
+    }),
+  ],
   devtool: 'source-map', // Helps with debugging
+  watchOptions: {
+    ignored: /node_modules/,
+    aggregateTimeout: 300,
+    poll: 1000,
+  },
 };

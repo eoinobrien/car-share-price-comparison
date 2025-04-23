@@ -13,23 +13,26 @@
     "@types/jest": "^29.5.0",
     "@types/node": "^22.14.1",
     "@types/yargs-parser": "^21.0.3",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
     "fs-extra": "^11.2.0",
     "http-server": "^14.1.1",
     "jest": "^29.7.0",
+    "style-loader": "^3.3.3",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.0.2",
     "webpack": "^5.99.6",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   },
   "scripts": {
     "test": "jest",
-    "build": "webpack && node build.js",
+    "build": "webpack",
     "start": "npm run build && http-server -c-1 ./dist",
     "dev:webpack": "webpack --watch",
-    "dev:copy": "node build.js",
     "dev:serve": "http-server -c-1 ./dist",
-    "dev": "start npm run dev:webpack && start npm run dev:copy && start npm run dev:serve"
+    "dev": "start npm run dev:webpack && start npm run dev:serve"
   },
   "keywords": [],
   "author": "",

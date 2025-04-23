@@ -175,7 +175,7 @@ select:focus {
 }
 
 .advanced-filters.show {
-    max-height: 600px; Increased to accommodate more content
+    max-height: 600px;
 }
 
 .advanced-filters .form-group {
