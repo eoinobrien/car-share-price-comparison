@@ -7,104 +7,31 @@
 import CarShareCalculator from "../js/carShareCalculator";
 import { Car, Company } from "../js/types";
 
-// Test data setup
-const mockCars: Record<string, Car> = {
-  economy: {
-    id: "economy-test",
-    name: "EconoTest",
-    type: "economy",
-    transmission: "manual",
-    fuelType: "petrol-diesel",
-    company: "gocar",
-    pricing: {
-      hour: 8,
-      day: 45,
-      week: 270,
-    },
-  },
-  premiumAuto: {
-    id: "premium-test",
-    name: "PremiumTest",
-    type: "premium",
-    transmission: "automatic",
-    fuelType: "petrol-diesel",
-    company: "driveyou",
-    pricing: {
-      hour: 12,
-      day: 65,
-      week: 350,
-    },
-    freeKmPolicy: {
-      hourly: 20, // Override company policy
-      daily: 120,
-    },
-  },
-  standardNoWeeklyRate: {
-    id: "standard-test",
-    name: "StandardTest",
-    type: "standard",
-    transmission: "manual",
-    fuelType: "petrol-diesel",
-    company: "yuko",
-    pricing: {
-      hour: 10,
-      day: 55,
-      // No weekly rate
-    },
-  },
-  // Adding a car with custom price per extra km
-  compactWithExtraKmPrice: {
-    id: "compact-test",
-    name: "CompactTest",
-    type: "compact",
-    transmission: "manual",
-    fuelType: "petrol-diesel",
-    company: "gocar",
-    pricing: {
-      hour: 7,
-      day: 40,
-      week: 240,
-    },
-    pricePerExtraKm: 0.3, // Custom price per extra km
-  },
-};
-
-const mockCompanies: Record<string, Company> = {
-  gocar: {
-    id: "gocar",
-    name: "GoCar",
-    defaultPricePerExtraKm: 0.25,
-    freeKmPolicy: {
-      standard: 50,
-    },
-  },
-  driveyou: {
-    id: "driveyou",
-    name: "DriveYou",
-    defaultPricePerExtraKm: 0.25,
-    freeKmPolicy: {
-      hourly: 15,
-      daily: 50,
-      weekly: 300,
-    },
-  },
-  yuko: {
-    id: "yuko",
-    name: "Yuko",
-    defaultPricePerExtraKm: 0.25,
-    freeKmPolicy: {
-      daily: 50,
-      weekly: 300,
-    },
-  },
-};
-
 describe("CarShareCalculator", () => {
   describe("calculateCarPrice", () => {
     test("should calculate price for short duration (1 hour) with no extra km", () => {
       const result = CarShareCalculator.calculateCarPrice(
-        mockCars.economy,
-        mockCompanies.gocar,
+        {
+          id: "economy-test",
+          name: "EconoTest",
+          type: "economy",
+          transmission: "manual",
+          fuelType: "petrol-diesel",
+          company: "gocar",
+          pricing: {
+            hour: 8,
+            day: 45,
+            week: 270,
+          },
+        },
+        {
+          id: "gocar",
+          name: "GoCar",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            standard: 50,
+          },
+        },
         1, // 1 hour
         30 // 30 km (within free km limit)
       );
@@ -117,8 +44,27 @@ describe("CarShareCalculator", () => {
 
     test("should calculate price with extra kilometers", () => {
       const result = CarShareCalculator.calculateCarPrice(
-        mockCars.economy,
-        mockCompanies.gocar,
+        {
+          id: "economy-test",
+          name: "EconoTest",
+          type: "economy",
+          transmission: "manual",
+          fuelType: "petrol-diesel",
+          company: "gocar",
+          pricing: {
+            hour: 8,
+            day: 45,
+            week: 270,
+          },
+        },
+        {
+          id: "gocar",
+          name: "GoCar",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            standard: 50,
+          },
+        },
         1, // 1 hour
         70 // 70 km (20 km over free limit)
       );
@@ -129,10 +75,63 @@ describe("CarShareCalculator", () => {
       expect(result.totalPrice).toBe(13);
     });
 
+    test("should only use standard free km policy once, even over multiple days", () => {
+      const result = CarShareCalculator.calculateCarPrice(
+        {
+          id: "economy-test",
+          name: "EconoTest",
+          type: "economy",
+          transmission: "manual",
+          fuelType: "petrol-diesel",
+          company: "gocar",
+          pricing: {
+            hour: 8,
+            day: 45,
+            week: 270,
+          },
+        },
+        {
+          id: "gocar",
+          name: "GoCar",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            standard: 50,
+          },
+        },
+        25,
+        70 // 70 km (20 km over free limit)
+      );
+
+      expect(result.timeCost).toBe(53); // hourly rate
+      expect(result.freeKm).toBe(50); // standard policy
+      expect(result.distanceCost).toBe(5); // 20 km × 0.25
+      expect(result.totalPrice).toBe(58);
+    });
+
     test("should use car's custom price per extra km when available", () => {
       const result = CarShareCalculator.calculateCarPrice(
-        mockCars.compactWithExtraKmPrice,
-        mockCompanies.gocar,
+        {
+          id: "compact-test",
+          name: "CompactTest",
+          type: "compact",
+          transmission: "manual",
+          fuelType: "petrol-diesel",
+          company: "gocar",
+          pricing: {
+            hour: 7,
+            day: 40,
+            week: 240,
+          },
+          pricePerExtraKm: 0.3, // Custom price per extra km
+        },
+        {
+          id: "gocar",
+          name: "GoCar",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            standard: 50,
+          },
+        },
         1,
         70 // 20 km over free limit
       );
@@ -145,14 +144,135 @@ describe("CarShareCalculator", () => {
 
     test("should use car's overridden free km policy when available", () => {
       const result = CarShareCalculator.calculateCarPrice(
-        mockCars.premiumAuto,
-        mockCompanies.driveyou,
+        {
+          id: "premium-test",
+          name: "PremiumTest",
+          type: "premium",
+          transmission: "automatic",
+          fuelType: "petrol-diesel",
+          company: "driveyou",
+          freeKmPolicy: {
+            hourly: 20,
+          },
+          pricing: {
+            hour: 12,
+            day: 65,
+            week: 350,
+          },
+        },
+        {
+          id: "driveyou",
+          name: "DriveYou",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            hourly: 15,
+            daily: 50,
+            weekly: 300,
+          },
+        },
         1, // 1 hour
-        25 // 25 km (5 km over the car's custom hourly limit)
+        25 // 25 km (5 km over the company's limit)
       );
 
       expect(result.freeKm).toBe(20); // Car-specific hourly policy
-      expect(result.distanceCost).toBe(1.25); // 5 km × 0.25
+      expect(result.distanceCost).toBe(1.25); // 10 km × 0.25
+    });
+
+    test("should use company's hourly free km policy", () => {
+      const result = CarShareCalculator.calculateCarPrice(
+        {
+          id: "premium-test",
+          name: "PremiumTest",
+          type: "premium",
+          transmission: "automatic",
+          fuelType: "petrol-diesel",
+          company: "driveyou",
+          pricing: {
+            hour: 12,
+            day: 65,
+            week: 350,
+          },
+        },
+        {
+          id: "driveyou",
+          name: "DriveYou",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            hourly: 15,
+            daily: 50,
+            weekly: 300,
+          },
+        },
+        1, // 1 hour
+        25 // 25 km (10 km over the company's limit)
+      );
+
+      expect(result.freeKm).toBe(15); // Car-specific hourly policy
+      expect(result.distanceCost).toBe(2.5); // 10 km × 0.25
+    });
+
+    test("should use company's daily free km policy, if hourly or standard doesn't exist", () => {
+      const result = CarShareCalculator.calculateCarPrice(
+        {
+          id: "daily-test",
+          name: "dailyTest",
+          type: "premium",
+          transmission: "automatic",
+          fuelType: "petrol-diesel",
+          company: "yuko",
+          pricing: {
+            hour: 12,
+            day: 65,
+            week: 350,
+          },
+        },
+        {
+          id: "yuko",
+          name: "Yuko",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            daily: 50,
+            weekly: 300,
+          },
+        },
+        1,
+        25
+      );
+
+      expect(result.freeKm).toBe(50);
+      expect(result.distanceCost).toBe(0);
+    });
+
+    test("should use company's daily free km policy, over multiple days", () => {
+      const result = CarShareCalculator.calculateCarPrice(
+        {
+          id: "daily-test",
+          name: "dailyTest",
+          type: "premium",
+          transmission: "automatic",
+          fuelType: "petrol-diesel",
+          company: "yuko",
+          pricing: {
+            hour: 12,
+            day: 65,
+            week: 350,
+          },
+        },
+        {
+          id: "yuko",
+          name: "Yuko",
+          defaultPricePerExtraKm: 0.25,
+          freeKmPolicy: {
+            daily: 50,
+            weekly: 300,
+          },
+        },
+        25,
+        25
+      );
+
+      expect(result.freeKm).toBe(100);
+      expect(result.distanceCost).toBe(0);
     });
   });
 

@@ -200,10 +200,6 @@ const CarShareCalculator = {
 
     // Use the policy hierarchy: car-specific policy overrides company policy
     const policy = {
-      quarterHours:
-        carPolicy?.quarterHours !== undefined
-          ? carPolicy.quarterHours
-          : companyPolicy.quarterHours,
       weekly:
         carPolicy?.weekly !== undefined
           ? carPolicy.weekly
@@ -214,6 +210,10 @@ const CarShareCalculator = {
         carPolicy?.hourly !== undefined
           ? carPolicy.hourly
           : companyPolicy.hourly,
+      quarterHours:
+        carPolicy?.quarterHours !== undefined
+          ? carPolicy.quarterHours
+          : companyPolicy.quarterHours,
       standard:
         carPolicy?.standard !== undefined
           ? carPolicy.standard
@@ -231,7 +231,11 @@ const CarShareCalculator = {
     if (policy.daily !== undefined) {
       let totalDays = timeBreakdown.days;
 
-      if (policy.hourly === undefined && policy.quarterHours === undefined && policy.standard === undefined) {
+      if (
+        policy.hourly === undefined &&
+        policy.quarterHours === undefined &&
+        policy.standard === undefined
+      ) {
         // If we have any hours or quarter hours, count as an additional day for free km
         if (timeBreakdown.hours > 0 || timeBreakdown.quarterHours > 0) {
           totalDays += 1;
@@ -242,6 +246,16 @@ const CarShareCalculator = {
       }
 
       totalFreeKm += totalDays * policy.daily;
+    }
+
+    // Add hourly allocation
+    if (timeBreakdown.hours > 0 && policy.hourly !== undefined) {
+      totalFreeKm += timeBreakdown.hours * policy.hourly;
+    }
+
+    // Add quarter hourly allocation
+    if (timeBreakdown.quarterHours > 0 && policy.quarterHours !== undefined) {
+      totalFreeKm += timeBreakdown.quarterHours * policy.quarterHours;
     }
 
     // If no specific allocations or total is 0, use standard
