@@ -1,4 +1,31 @@
 /* General Styles */
+:root {
+    --hue: 52;
+    --tertiary-hue: calc(var(--hue) + 300);
+    --accent-hue:  calc(var(--hue) + 60);
+
+    --primary-color: hsl(var(--hue), 50%, 10%);
+    --pre-primary-color: hsl(var(--hue), 50%, 30%);
+    --secondary-color: hsl(var(--hue), 50%, 90%);
+    --pre-secondary-color: hsl(var(--hue), 50%, 80%);
+    --tertiary-color: hsl(var(--tertiary-hue), 80%, 20%);
+    --tertiary-color-alpha: hsl(var(--tertiary-hue), 80%, 20%, 0.3);
+    --accent-color: hsl(var(--accent-hue), 80%, 30%);
+    --pre-accent-color: hsl(var(--accent-hue), 80%, 50%);
+
+    --border-size: 3px;
+}
+.dark {
+    --primary-color: hsl(var(--hue), 50%, 90%);
+    --pre-primary-color: hsl(var(--hue), 50%, 70%);
+    --secondary-color: hsl(var(--hue), 50%, 10%);
+    --pre-secondary-color: hsl(var(--hue), 50%, 20%);
+    --tertiary-color: hsl(var(--tertiary-hue), 80%, 80%);
+    --tertiary-color-alpha: hsl(var(--tertiary-hue), 80%, 80%, 0.3);
+    --accent-color: hsl(var(--accent-hue), 80%, 70%);
+    --pre-accent-color: hsl(var(--accent-hue), 80%, 50%);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,10 +33,10 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
     padding: 20px;
 }
 
@@ -17,33 +44,13 @@ header {
     text-align: center;
     margin-bottom: 30px;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
 }
 
 /* Form Styles */
 .input-section {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--pre-secondary-color);
     padding: 20px;
     margin-bottom: 30px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-    position: relative;
 }
 
 .form-group label {
@@ -72,25 +79,26 @@ input.invalid + .error-message {
 
 input[type="number"],
 select {
+    background-color: transparent;
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: var(--border-size) solid var(--tertiary-color);
+    color: var(--tertiary-color);
     font-size: 16px;
-    transition: border 0.3s, box-shadow 0.3s;
+    transition:
+        border 0.3s,
+        box-shadow 0.3s;
 }
 
 input[type="number"]:focus,
 select:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 0 0 3px var(--tertiary-color-alpha);
 }
 
 /* Filter checkboxes styles */
 .filter-group {
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: var(--border-size) solid var(--tertiary-color);
     padding: 10px 15px;
 }
 
@@ -127,20 +135,19 @@ select:focus {
 }
 
 .checkbox-item:hover label {
-    color: #3498db;
+    color: var(--tertiary-color);
 }
 
 /* Filter controls section */
 .filter-controls {
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #eee;
 }
 
 .filter-toggle {
     background: none;
     border: none;
-    color: #3498db;
+    color: var(--tertiary-color);
     cursor: pointer;
     font-weight: 500;
     padding: 5px 0;
@@ -150,11 +157,11 @@ select:focus {
 }
 
 .filter-toggle:hover {
-    color: #2980b9;
+    background: var(--tertiary-color-alpha); 
 }
 
 .filter-toggle:before {
-    content: '▼';
+    content: "▼";
     font-size: 10px;
     margin-right: 5px;
     transition: transform 0.3s;
@@ -167,8 +174,8 @@ select:focus {
 .advanced-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 15px;
+    gap: 1rem;
+    margin-top: 1rem;
     overflow: hidden;
     max-height: 0;
     transition: max-height 0.3s;
@@ -184,31 +191,20 @@ select:focus {
 }
 
 button {
-    background-color: #3498db;
-    color: #fff;
     border: none;
     padding: 12px 20px;
-    border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
     width: 100%;
-    transition: background-color 0.3s, transform 0.1s;
-}
-
-button:hover {
-    background-color: #bde5ff;
-}
-
-button:active {
-    transform: scale(0.98);
+    transition:
+        background-color 0.3s,
+        transform 0.1s;
 }
 
 /* Results Styles */
 .results-section {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--pre-secondary-color);
     padding: 20px;
 }
 
@@ -228,14 +224,13 @@ button:active {
 .sort-controls label {
     font-size: 14px;
     font-weight: 600;
-    color: #7f8c8d;
+    color: var(--primary-color);
 }
 
 .sort-controls select {
     width: auto;
     padding: 6px 8px;
     font-size: 14px;
-    border-radius: 4px;
 }
 
 .loading-indicator {
@@ -252,15 +247,19 @@ button:active {
     width: 40px;
     height: 40px;
     margin: 0 auto 15px;
-    border: 4px solid rgba(52, 152, 219, 0.3);
+    border: var(--border-size) solid rgba(52, 152, 219, 0.3);
     border-top: 4px solid #3498db;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .results-grid {
@@ -279,7 +278,6 @@ button:active {
     background-color: #fff3cd;
     border-left: 4px solid #ffc107;
     color: #856404;
-    border-radius: 0 4px 4px 0;
     font-size: 14px;
 }
 
@@ -289,11 +287,12 @@ button:active {
 
 /* Car Card Styles */
 .car-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background: var(--secondary-color);
+    border: var(--border-size) solid var(--tertiary-color);
     padding: 20px;
-    background-color: #fbfbfb;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
     position: relative;
     overflow: hidden;
 }
@@ -326,7 +325,7 @@ button:active {
 
 .car-card .company {
     font-weight: 600;
-    color: #7f8c8d;
+    color: var(--pre-primary-color);
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -361,34 +360,30 @@ button:active {
 }
 
 .car-card .details {
+    font-size: 1rem;
     line-height: 1.8;
 }
 
 .car-card .car-notes {
-    margin-top: 15px;
-    padding: 10px;
     font-style: italic;
-    color: #34495e;
-    border-top: 1px solid #677e95;
+    color: var(--accent-color);
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .car-card .price {
     font-size: 28px;
     font-weight: 700;
-    color: #27ae60;
+    color: var(--accent-color);
     margin: 15px 0 0;
     padding: 10px;
-    background-color: #f0fff0;
-    border-radius: 4px;
+    background-color: hsl(var(--accent-hue), 50%, 80%);
     text-align: center;
 }
 
 .car-card .breakdown {
-    font-size: 14px;
-    color: #7f8c8d;
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--pre-primary-color);
 }
 
 /* No Results Message */
@@ -396,9 +391,7 @@ button:active {
     grid-column: 1 / -1;
     text-align: center;
     padding: 30px;
-    color: #e74c3c;
-    background-color: #fadbd8;
-    border-radius: 8px;
+    color: var(--tertiary-color);
     font-weight: 600;
 }
 
@@ -407,7 +400,7 @@ footer {
     text-align: center;
     margin-top: 30px;
     padding: 20px;
-    color: #7f8c8d;
+    color: var(--primary-color);
 }
 
 /* Responsive Styles */
@@ -416,26 +409,22 @@ footer {
         max-width: 1200px;
         margin: 0 auto;
     }
-    
+
     .form-row {
         display: flex;
         gap: 20px;
     }
-    
+
     .form-group {
         flex: 1;
     }
 }
 
 @media (max-width: 767px) {
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
     .advanced-filters .form-group {
-        flex: 100%;
+        flex: 50%;
     }
-    
+
     .checkbox-group {
         flex-direction: column;
         gap: 5px;

@@ -44,6 +44,7 @@ export interface PriceCalculationResult {
   timeCost: number;
   distanceCost: number;
   totalPrice: number;
+  paidKm: number;
   freeKm: number;
   pricePerExtraKm: number;
   pricingTier: string;

@@ -119,8 +119,8 @@ document.addEventListener("DOMContentLoaded", function () {
     this.classList.toggle("expanded");
     advancedFilters.classList.toggle("show");
     this.textContent = advancedFilters.classList.contains("show")
-      ? "Hide Options"
-      : "Show More Options";
+      ? "Hide options"
+      : "Show more options";
   });
 
   // Initialize sort functionality
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Apply fuel-type filter (if 'all' is selected, don't filter)
     if (!selectedFuelTypes.includes("all")) {
       filteredCars = filteredCars.filter((car) =>
-        selectedFuelTypes.includes(car.transmission)
+        selectedFuelTypes.includes(car.fuelType)
       );
     }
 
@@ -346,6 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
       timeCost,
       distanceCost,
       totalPrice,
+      paidKm,
       freeKm,
       pricePerExtraKm,
       pricingTier,
@@ -379,120 +380,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="company-logo"><img src="images/${company.id}.png" role="presentation" /></div>
                 ${company.name}
             </div>
-            <h3 class="car-name">
+            <h1 class="car-name">
                 ${car.name}
                 <span class="icons">
                     ${
                         car.transmission == "manual"
-                        ? "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'><title>Manual transmission</title><path d='M160-120q-50 0-85-35t-35-85q0-39 22.5-70t57.5-43v-254q-35-12-57.5-43T40-720q0-50 35-85t85-35 85 35 35 85q0 39-22.5 70T200-607v87h240v-87q-35-12-57.5-43T360-720q0-50 35-85t85-35 85 35 35 85q0 39-22.5 70T520-607v87h200q17 0 28.5-11.5T760-560v-47q-35-12-57.5-43T680-720q0-50 35-85t85-35 85 35 35 85q0 39-22.5 70T840-607v47q0 50-35 85t-85 35H520v87q35 12 57.5 43t22.5 70q0 50-35 85t-85 35-85-35-35-85q0-39 22.5-70t57.5-43v-87H200v87q35 12 57.5 43t22.5 70q0 50-35 85t-85 35m0-80q17 0 28.5-11.5T200-240t-11.5-28.5T160-280t-28.5 11.5T120-240t11.5 28.5T160-200m0-480q17 0 28.5-11.5T200-720t-11.5-28.5T160-760t-28.5 11.5T120-720t11.5 28.5T160-680m320 480q17 0 28.5-11.5T520-240t-11.5-28.5T480-280t-28.5 11.5T440-240t11.5 28.5T480-200m0-480q17 0 28.5-11.5T520-720t-11.5-28.5T480-760t-28.5 11.5T440-720t11.5 28.5T480-680m320 0q17 0 28.5-11.5T840-720t-11.5-28.5T800-760t-28.5 11.5T760-720t11.5 28.5T800-680m0-40'/></svg>"
-                        : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'><title>Automatic transmission</title><path d='M276-280h76l40-112h176l40 112h76L520-720h-80zm138-176 64-182h4l64 182zm66 376q-83 0-156-31.5T197-197t-85.5-127T80-480t31.5-156T197-763t127-85.5T480-880t156 31.5T763-763t85.5 127T880-480t-31.5 156T763-197t-127 85.5T480-80m0-80q133 0 226.5-93.5T800-480t-93.5-226.5T480-800t-226.5 93.5T160-480t93.5 226.5T480-160'/></svg>"
+                        ? "<svg  xmlns='http://www.w3.org/2000/svg'  width='24'  height='24'  viewBox='0 0 24 24'  fill='currentColor'><title>Manual transmission</title><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M19 3a3 3 0 0 1 1 5.829v1.171a3 3 0 0 1 -3 3h-4v2.171a3.001 3.001 0 1 1 -4 2.829l.005 -.176a3 3 0 0 1 1.995 -2.654v-2.17h-5v2.171a3.001 3.001 0 1 1 -4 2.829l.005 -.176a3 3 0 0 1 1.995 -2.654v-6.341a3 3 0 0 1 -2 -2.829l.005 -.176a3 3 0 1 1 3.996 3.005l-.001 2.171h5v-2.17a3 3 0 0 1 -2 -2.83l.005 -.176a3 3 0 1 1 3.996 3.005l-.001 2.171h4a1 1 0 0 0 1 -1v-1.17a3 3 0 0 1 -2 -2.83l.005 -.176a3 3 0 0 1 2.995 -2.824' /></svg>"
+                        : "<svg  xmlns='http://www.w3.org/2000/svg'  width='24'  height='24'  viewBox='0 0 24 24'  fill='currentColor'><title>Automatic transmission</title><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M12.707 2.793l2.208 2.207h3.085a1 1 0 0 1 .993 .883l.007 .117v3.085l2.207 2.208a1 1 0 0 1 .083 1.32l-.083 .094l-2.207 2.207v3.086a1 1 0 0 1 -.883 .993l-.117 .007h-3.086l-2.207 2.207a1 1 0 0 1 -1.32 .083l-.094 -.083l-2.208 -2.207h-3.085a1 1 0 0 1 -.993 -.883l-.007 -.117v-3.085l-2.207 -2.208a1 1 0 0 1 -.083 -1.32l.083 -.094l2.207 -2.209v-3.084a1 1 0 0 1 .883 -.993l.117 -.007h3.084l2.209 -2.207a1 1 0 0 1 1.414 0m-.707 5.207a3 3 0 0 0 -3 3v3.5a1 1 0 0 0 2 0v-.5h2v.5a1 1 0 0 0 .883 .993l.117 .007a1 1 0 0 0 1 -1v-3.5a3 3 0 0 0 -3 -3m0 2a1 1 0 0 1 1 1v1h-2v-1a1 1 0 0 1 .883 -.993z' /></svg>"
                     }
                     ${
                         car.fuelType == "electric"
-                        ? "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'><title>Electric car</title><path d='m280-80 160-300-320-40 480-460h80L520-580l320 40L360-80zm222-247 161-154-269-34 63-117-160 154 268 33zm-22-153'/></svg>"
+                        ? "<svg  xmlns='http://www.w3.org/2000/svg'  width='24'  height='24'  viewBox='0 0 24 24'  fill='currentColor'><title>Electric transmission</title><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M13 2l.018 .001l.016 .001l.083 .005l.011 .002h.011l.038 .009l.052 .008l.016 .006l.011 .001l.029 .011l.052 .014l.019 .009l.015 .004l.028 .014l.04 .017l.021 .012l.022 .01l.023 .015l.031 .017l.034 .024l.018 .011l.013 .012l.024 .017l.038 .034l.022 .017l.008 .01l.014 .012l.036 .041l.026 .027l.006 .009c.12 .147 .196 .322 .218 .513l.001 .012l.002 .041l.004 .064v6h5a1 1 0 0 1 .868 1.497l-.06 .091l-8 11c-.568 .783 -1.808 .38 -1.808 -.588v-6h-5a1 1 0 0 1 -.868 -1.497l.06 -.091l8 -11l.01 -.013l.018 -.024l.033 -.038l.018 -.022l.009 -.008l.013 -.014l.04 -.036l.028 -.026l.008 -.006a1 1 0 0 1 .402 -.199l.011 -.001l.027 -.005l.074 -.013l.011 -.001l.041 -.002z' /></svg>"
                         : ""
                     }
                 </span>
-            </h3>
+            </h1>
+           <!-- ${car.notes ? `<h2 class="car-notes">${car.notes}</h2>` : ""} --->
             <div class="details">
                 <div>${CarShareCalculator.capitalizeFirstLetter(car.type)}</div>
-                <div>${freeKmMessage} free (${formatCurrency(pricePerExtraKm)} per extra KM)</div>
             </div>
             <div class="price">${formatCurrency(totalPrice)}</div>
             <div class="breakdown">
-                <div>Rate: ${pricingTier}</div>
-                <div>Time Cost: ${formatCurrency(timeCost)}</div>
-                <div>Distance Cost: ${formatCurrency(distanceCost)}</div>
+                <div>Time cost: ${pricingTier} (${formatCurrency(timeCost)})</div>
+                <div>Distance cost: ${freeKmMessage} free + ${paidKm} additional kilometers (${formatCurrency(distanceCost)})</div>
             </div>
-            ${car.notes ? `<div class="car-notes">${car.notes}</div>` : ""}
         `;
 
     // Add card to results container
     resultsContainer.appendChild(cardElement);
-  }
-
-  /**
-   * Save comparison to localStorage
-   */
-  function saveComparison(carId: string, price: number): void {
-    // Get existing saved comparisons or initialize empty array
-    let savedComparisons = JSON.parse(
-      localStorage.getItem("savedComparisons") || "[]"
-    );
-
-    // Check if already saved
-    const existingIndex = savedComparisons.findIndex(
-      (item: any) => item.carId === carId
-    );
-
-    if (existingIndex >= 0) {
-      // Already saved - update with new price
-      savedComparisons[existingIndex] = {
-        carId,
-        price: parseFloat(price.toString()),
-        duration: parseFloat(durationInput.value),
-        kilometers: parseFloat(kilometersInput.value),
-        timestamp: new Date().toISOString(),
-      };
-      alert("Comparison updated!");
-    } else {
-      // Add new saved comparison
-      savedComparisons.push({
-        carId,
-        price: parseFloat(price.toString()),
-        duration: parseFloat(durationInput.value),
-        kilometers: parseFloat(kilometersInput.value),
-        timestamp: new Date().toISOString(),
-      });
-      alert("Comparison saved!");
-    }
-
-    // Save back to localStorage (maximum 10 saved comparisons)
-    if (savedComparisons.length > 10) {
-      savedComparisons = savedComparisons.slice(-10);
-    }
-    localStorage.setItem("savedComparisons", JSON.stringify(savedComparisons));
-  }
-
-  /**
-   * Share comparison by generating URL with parameters
-   */
-  function shareComparison(carId: string): void {
-    const duration = parseFloat(durationInput.value);
-    const kilometers = parseFloat(kilometersInput.value);
-    const selectedCarTypes = getSelectedCheckboxValues(carTypeCheckboxes);
-    const selectedTransmissions = getSelectedCheckboxValues(
-      transmissionCheckboxes
-    );
-    const selectedFuelType = getSelectedCheckboxValues(
-      transmissionCheckboxes
-    );
-
-    // Generate URL with parameters
-    const baseUrl = window.location.href.split("?")[0];
-    const url = new URL(baseUrl);
-    url.searchParams.set("duration", duration.toString());
-    url.searchParams.set("km", kilometers.toString());
-    url.searchParams.set("carId", carId);
-
-    if (!selectedCarTypes.includes("all")) {
-      url.searchParams.set("carType", selectedCarTypes.join(","));
-    }
-
-    if (!selectedTransmissions.includes("all")) {
-      url.searchParams.set("transmission", selectedTransmissions.join(","));
-    }
-
-    // Copy to clipboard
-    navigator.clipboard
-      .writeText(url.toString())
-      .then(() => {
-        alert("Link copied to clipboard! Share it to show this comparison.");
-      })
-      .catch((err) => {
-        console.error("Failed to copy to clipboard:", err);
-        alert("URL for sharing: " + url.toString());
-      });
   }
 
   /**

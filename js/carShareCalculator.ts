@@ -37,8 +37,10 @@ const CarShareCalculator = {
         : company.defaultPricePerExtraKm;
 
     // Calculate distance-based cost
+
+    const paidKm = kilometers > freeKm ? (kilometers - freeKm) : 0;
     const distanceCost =
-      kilometers > freeKm ? (kilometers - freeKm) * pricePerExtraKm : 0;
+      paidKm ? paidKm * pricePerExtraKm : 0;
 
     // Calculate total price
     const totalPrice = timeBreakdown.cost + distanceCost;
@@ -48,6 +50,7 @@ const CarShareCalculator = {
       distanceCost,
       totalPrice,
       freeKm,
+      paidKm,
       pricePerExtraKm,
       pricingTier: timeBreakdown.tier,
     };
@@ -76,7 +79,7 @@ const CarShareCalculator = {
         hours: 1,
         quarterHours: 0,
         cost: car.pricing.hour,
-        tier: "1 hour (minimum)",
+        tier: "1 hour minimum",
       };
     }
 
