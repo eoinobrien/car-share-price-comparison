@@ -26,18 +26,6 @@ export const companies: Company[] = [
             weekly: 300   // 300km free per week
         },
         defaultPricePerExtraKm: 0.25
-    },
-    {
-        id: "driveyou",
-        name: "Drive You",
-        // Drive You has different free km policies based on rental duration
-        freeKmPolicy: {
-            quarterHours: 3, // 3km free per fifteen minutes
-            hourly: 15,   // 15km free per hour
-            daily: 50,    // 50km free per day
-            weekly: 300   // 300km free per week
-        },
-        defaultPricePerExtraKm: 0.25
     }
 ];
 
@@ -343,106 +331,6 @@ export const cars: Car[] = [
         },
         notes: "Long wheel base van"
     },
-
-    // Drive You vehicles - pricing from untitled:Untitled-3
-    {
-        id: "driveyou-i10",
-        name: "i10",
-        company: "driveyou",
-        type: "economy",
-        transmission: "manual",
-        fuelType: "petrol-diesel",
-        pricing: {
-            hour: 9.00,
-            day: 50.00,
-            week: 330.00
-        },
-        notes: "Compact economy car"
-    },
-    {
-        id: "driveyou-i10-automatic",
-        name: "i10 Automatic",
-        company: "driveyou",
-        type: "economy",
-        transmission: "automatic",
-        fuelType: "petrol-diesel",
-        pricing: {
-            hour: 10.00,
-            day: 55.00,
-            week: 365.00
-        },
-        notes: "Compact automatic economy car"
-    },
-    {
-        id: "driveyou-i20",
-        name: "i20",
-        company: "driveyou",
-        type: "compact",
-        transmission: "manual",
-        fuelType: "petrol-diesel",
-        pricing: {
-            hour: 11.00,
-            day: 55.00,
-            week: 365.00
-        },
-        notes: "Small cars, perfect for city driving"
-    },
-    {
-        id: "driveyou-i20-automatic",
-        name: "i20",
-        company: "driveyou",
-        type: "compact",
-        transmission: "automatic",
-        fuelType: "petrol-diesel",
-        pricing: {
-            hour: 11.00,
-            day: 55.00,
-            week: 365.00
-        },
-        notes: "Small cars, perfect for city driving"
-    },
-    {
-        id: "driveyou-i30-bayon",
-        name: "i30/Bayon",
-        company: "driveyou",
-        type: "standard",
-        transmission: "automatic",
-        fuelType: "petrol-diesel",
-        pricing: {
-            hour: 12.00,
-            day: 60.00,
-            week: 385.00
-        },
-        notes: "Midsize automatic car"
-    },
-    {
-        id: "driveyou-kona-ev",
-        name: "Kona EV",
-        company: "driveyou",
-        type: "premium",
-        transmission: "automatic",
-        fuelType: "electric",
-        pricing: {
-            hour: 12.00,
-            day: 60.00,
-            week: 385.00
-        },
-        notes: "Electric vehicle"
-    },
-    {
-        id: "driveyou-staria-van",
-        name: "Staria Van",
-        company: "driveyou",
-        type: "van",
-        transmission: "automatic",
-        fuelType: "petrol-diesel",
-        pricing: {
-            hour: 12.00,
-            day: 60.00,
-            week: 420.00
-        },
-        notes: "Spacious automatic van"
-    }
 ];
 
 // For browser usage
