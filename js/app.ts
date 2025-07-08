@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const comparisonForm = document.getElementById(
     "comparison-form"
   ) as HTMLFormElement;
-  const durationInput = document.getElementById("duration") as HTMLInputElement;
+  const durationDaysInput = document.getElementById("duration-days") as HTMLInputElement;
+  const durationHoursInput = document.getElementById("duration-hours") as HTMLInputElement;
+  const durationMinutesInput = document.getElementById("duration-minutes") as HTMLInputElement;
   const kilometersInput = document.getElementById(
     "kilometers"
   ) as HTMLInputElement;
@@ -132,10 +134,64 @@ document.addEventListener("DOMContentLoaded", function () {
   // Store current results for sorting without recalculation
   let currentResults: PriceResultWithDetails[] = [];
 
+  // Duration normalization function (for internal calculations only)
+  function normalizeDurationForCalculation(): { days: number; hours: number; minutes: number } {
+    const days = parseInt(durationDaysInput.value) || 0;
+    const hours = parseInt(durationHoursInput.value) || 0;
+    const minutes = parseInt(durationMinutesInput.value) || 0;
+
+    // Convert everything to minutes for calculation
+    let totalMinutes = days * 24 * 60 + hours * 60 + minutes;
+
+    // Ensure minutes are in 15-minute increments for calculation
+    totalMinutes = Math.round(totalMinutes / 15) * 15;
+
+    // Convert back to days, hours, minutes
+    const normalizedDays = Math.floor(totalMinutes / (24 * 60));
+    const remainingMinutesAfterDays = totalMinutes % (24 * 60);
+    const normalizedHours = Math.floor(remainingMinutesAfterDays / 60);
+    const normalizedMinutes = remainingMinutesAfterDays % 60;
+
+    return { days: normalizedDays, hours: normalizedHours, minutes: normalizedMinutes };
+  }
+
+  // Function to get total duration in hours
+  function getTotalDurationInHours(): number {
+    const days = parseInt(durationDaysInput.value) || 0;
+    const hours = parseInt(durationHoursInput.value) || 0;
+    const minutes = parseInt(durationMinutesInput.value) || 0;
+    
+    return days * 24 + hours + minutes / 60;
+  }
+
+  // Add input validation visual feedback
+  function validateDurationInputs(): boolean {
+    const days = parseInt(durationDaysInput.value) || 0;
+    const hours = parseInt(durationHoursInput.value) || 0;
+    const minutes = parseInt(durationMinutesInput.value) || 0;
+    
+    const totalHours = days * 24 + hours + minutes / 60;
+    const maxHours = 31 * 24; // 31 days maximum
+    
+    const isValid = totalHours >= 0.25 && totalHours <= maxHours; // Minimum 15 minutes, maximum 31 days
+    
+    const durationGroup = document.querySelector('.duration-group');
+    if (isValid) {
+      durationGroup?.classList.remove('invalid');
+    } else {
+      durationGroup?.classList.add('invalid');
+    }
+    
+    return isValid;
+  }
+
   // Add input validation visual feedback
   function validateInput(input: HTMLInputElement): boolean {
     const value = parseFloat(input.value);
-    if (isNaN(value) || value < 0) {
+    const min = parseFloat(input.min) || 0;
+    const max = parseFloat(input.max) || Infinity;
+    
+    if (isNaN(value) || value < min || value > max) {
       input.classList.add("invalid");
       return false;
     } else {
@@ -145,8 +201,30 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Add event listeners for input validation
-  durationInput.addEventListener("blur", function () {
-    validateInput(this);
+  durationDaysInput.addEventListener("blur", function () {
+    // Ensure days stay within limits
+    const value = parseInt(this.value) || 0;
+    if (value < 0) this.value = "0";
+    if (value > 31) this.value = "7";
+    validateDurationInputs();
+  });
+
+  durationHoursInput.addEventListener("blur", function () {
+    // Ensure hours stay within limits
+    const value = parseInt(this.value) || 0;
+    if (value < 0) this.value = "0";
+    if (value > 23) this.value = "23";
+    validateDurationInputs();
+  });
+
+  durationMinutesInput.addEventListener("blur", function () {
+    // Ensure minutes are in 15-minute increments and within limits
+    const value = parseInt(this.value) || 0;
+    const normalizedMinutes = Math.round(value / 15) * 15;
+    if (normalizedMinutes < 0) this.value = "0";
+    else if (normalizedMinutes > 45) this.value = "45";
+    else this.value = normalizedMinutes.toString();
+    validateDurationInputs();
   });
 
   kilometersInput.addEventListener("blur", function () {
@@ -154,7 +232,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Add event listeners for input changes to calculate prices automatically
-  durationInput.addEventListener("input", debounce(calculatePrices, 500));
+  durationDaysInput.addEventListener("input", debounce(calculatePrices, 500));
+  durationHoursInput.addEventListener("input", debounce(calculatePrices, 500));
+  durationMinutesInput.addEventListener("input", debounce(calculatePrices, 500));
   kilometersInput.addEventListener("input", debounce(calculatePrices, 500));
 
   // Keep the form submission event listener for when users press Enter
@@ -198,14 +278,14 @@ document.addEventListener("DOMContentLoaded", function () {
     resultsContainer.innerHTML = "";
 
     // Get user input values
-    const duration = parseFloat(durationInput.value);
+    const duration = getTotalDurationInHours();
     const kilometers = parseFloat(kilometersInput.value);
     const selectedCarTypes = getSelectedCheckboxValues(carTypeCheckboxes);
     const selectedTransmissions = getSelectedCheckboxValues(transmissionCheckboxes);
     const selectedFuelTypes = getSelectedCheckboxValues(fuelTypeCheckboxes);
 
     // Validate inputs
-    const isDurationValid = validateInput(durationInput);
+    const isDurationValid = validateDurationInputs();
     const isKilometersValid = validateInput(kilometersInput);
     if (!isDurationValid || !isKilometersValid) {
       loadingIndicator.classList.remove("show");
@@ -417,7 +497,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has("duration")) {
-      durationInput.value = urlParams.get("duration")!;
+      const totalHours = parseFloat(urlParams.get("duration")!);
+      const days = Math.floor(totalHours / 24);
+      const hours = Math.floor(totalHours % 24);
+      const minutes = Math.round((totalHours % 1) * 60);
+      
+      durationDaysInput.value = days.toString();
+      durationHoursInput.value = hours.toString();
+      durationMinutesInput.value = minutes.toString();
     }
 
     if (urlParams.has("km")) {

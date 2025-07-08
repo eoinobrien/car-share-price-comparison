@@ -2,7 +2,7 @@
 :root {
     --hue: 52;
     --tertiary-hue: calc(var(--hue) + 300);
-    --accent-hue:  calc(var(--hue) + 60);
+    --accent-hue: calc(var(--hue) + 60);
 
     --primary-color: hsl(var(--hue), 50%, 10%);
     --pre-primary-color: hsl(var(--hue), 50%, 30%);
@@ -75,6 +75,46 @@ input.invalid {
 
 input.invalid + .error-message {
     display: block;
+}
+
+/* Duration input group validation styling */
+.duration-group.invalid .duration-inputs {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3);
+}
+
+.duration-group.invalid .error-message {
+    display: block;
+}
+
+/* Duration inputs styling */
+.duration-inputs {
+    border: none;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.duration-inputs legend {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.duration-input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.duration-input-group input {
+    border: 1px solid var(--tertiary-color);
+    max-width: 4rem;
+}
+
+.duration-input-group label {
+    margin: 0;
+    white-space: nowrap;
+    flex-grow: 2;
 }
 
 input[type="number"],
@@ -157,7 +197,7 @@ select:focus {
 }
 
 .filter-toggle:hover {
-    background: var(--tertiary-color-alpha); 
+    background: var(--tertiary-color-alpha);
 }
 
 .filter-toggle:before {
