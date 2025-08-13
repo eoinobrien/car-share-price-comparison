@@ -27,6 +27,7 @@ describe("CarShareCalculator", () => {
         {
           id: "gocar",
           name: "GoCar",
+          logo: "gocar.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             standard: 50,
@@ -60,6 +61,7 @@ describe("CarShareCalculator", () => {
         {
           id: "gocar",
           name: "GoCar",
+          logo: "gocar.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             standard: 50,
@@ -93,6 +95,7 @@ describe("CarShareCalculator", () => {
         {
           id: "gocar",
           name: "GoCar",
+          logo: "gocar.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             standard: 50,
@@ -127,6 +130,7 @@ describe("CarShareCalculator", () => {
         {
           id: "gocar",
           name: "GoCar",
+          logo: "gocar.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             standard: 50,
@@ -163,6 +167,7 @@ describe("CarShareCalculator", () => {
         {
           id: "driveyou",
           name: "DriveYou",
+          logo: "driveyou.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             hourly: 15,
@@ -196,6 +201,7 @@ describe("CarShareCalculator", () => {
         {
           id: "driveyou",
           name: "DriveYou",
+          logo: "driveyou.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             hourly: 15,
@@ -229,6 +235,7 @@ describe("CarShareCalculator", () => {
         {
           id: "yuko",
           name: "Yuko",
+          logo: "yuko.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             daily: 50,
@@ -261,6 +268,7 @@ describe("CarShareCalculator", () => {
         {
           id: "yuko",
           name: "Yuko",
+          logo: "yuko.png",
           defaultPricePerExtraKm: 0.25,
           freeKmPolicy: {
             daily: 50,

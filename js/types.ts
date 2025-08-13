@@ -18,12 +18,12 @@ export enum KmPolicyType {
 
 export type FreeKmPolicy = {
   [key in KmPolicyType]?: number;
-}
+};
 
 export interface Car {
   id: string;
   name: string;
-  type: "economy" | "standard" | "premium" | "compact" | "van";
+  type: "small" | "economy" | "standard" | "compact" | "premium" | "van";
   transmission: "manual" | "automatic";
   fuelType: "petrol-diesel" | "electric";
   company: string;
@@ -38,6 +38,7 @@ export interface Company {
   name: string;
   defaultPricePerExtraKm: number;
   freeKmPolicy: FreeKmPolicy;
+  logo: string;
 }
 
 export interface PriceCalculationResult {

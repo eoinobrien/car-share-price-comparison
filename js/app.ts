@@ -457,7 +457,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Populate card with car details and prices
     cardElement.innerHTML = `
             <div class="company">
-                <div class="company-logo"><img src="images/${company.id}.png" role="presentation" /></div>
+                <div class="company-logo"><img src="images/${company.logo}" role="presentation" /></div>
                 ${company.name}
             </div>
             <h1 class="car-name">
