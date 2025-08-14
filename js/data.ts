@@ -37,8 +37,7 @@ export const companies: Company[] = [
       daily: 50, // Standard free km
     },
     defaultPricePerExtraKm: 0.25,
-    },
-  /*
+  },
   {
     id: "enterprise-standard",
     name: "Enterprise Standard",
@@ -57,7 +56,6 @@ export const companies: Company[] = [
     },
     defaultPricePerExtraKm: 0.2,
   },
-  */
 ];
 
 // Car data - includes company-specific cars with their pricing
@@ -403,8 +401,7 @@ export const cars: Car[] = [
     },
   },
 
-    // Enterprise Car Club - Standard+
-  /*
+  // Enterprise Car Club - Standard+
   {
     id: "enterprise-small",
     name: "Toyota Aygo or similar",
@@ -719,7 +716,6 @@ export const cars: Car[] = [
     },
     pricePerExtraKm: 0.09,
   },
-  */
 ];
 
 // For browser usage
