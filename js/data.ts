@@ -401,7 +401,7 @@ export const cars: Car[] = [
     },
   },
 
-  // Enterprise Car Club - Standard+
+  // Enterprise Car Club - Standard
   {
     id: "enterprise-small",
     name: "Toyota Aygo or similar",
